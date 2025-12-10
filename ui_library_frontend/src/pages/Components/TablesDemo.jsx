@@ -2,8 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 
 /**
  * PUBLIC_INTERFACE
- * TablesDemo provides four distinct table examples, each rendered inside its own <section>,
- * and each with a matching code snippet derived from the same JSX (single source of truth).
+ * TablesDemo provides four distinct table examples, each rendered inside its own <section>.
  * Demos:
  *  1) Basic Table: static data, simple styling.
  *  2) Sortable Table: click column headers to sort asc/desc with indicator.
@@ -22,23 +21,7 @@ const baseData = [
   { id: 6, name: "Noah Brooks", email: "noah.brooks@example.com", role: "Engineer" },
 ];
 
-/**
- * Utility: escape HTML for code output
- */
-function escapeHtml(s = "") {
-  return String(s)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-}
 
-/**
- * Convert JSX section to an "App" snippet (keeps className attributes).
- * For simplicity, we manually string-build each section from the same state that renders the preview.
- */
-function buildSectionHtml(strings) {
-  return ["<section>", ...strings.map((l) => `  ${l}`), "</section>"].join("\n");
-}
 
 /**
  * Basic Table - static preview and code
@@ -70,35 +53,7 @@ function BasicTableSection() {
     </section>
   );
 
-  const rowsHtml = rows
-    .map(
-      (r) =>
-        `<tr className="border-t border-gray-100">
-          <td className="px-4 py-2">${escapeHtml(r.name)}</td>
-          <td className="px-4 py-2">${escapeHtml(r.email)}</td>
-          <td className="px-4 py-2">${escapeHtml(r.role)}</td>
-        </tr>`
-    )
-    .join("\n        ");
-
-  const code = buildSectionHtml([
-    `<div className="rounded-xl border border-gray-200 overflow-hidden bg-white">`,
-    `  <table className="w-full text-left text-sm">`,
-    `    <thead className="bg-gray-50">`,
-    `      <tr>`,
-    `        <th className="px-4 py-2 text-gray-700">Name</th>`,
-    `        <th className="px-4 py-2 text-gray-700">Email</th>`,
-    `        <th className="px-4 py-2 text-gray-700">Role</th>`,
-    `      </tr>`,
-    `    </thead>`,
-    `    <tbody>`,
-    `        ${rowsHtml}`,
-    `    </tbody>`,
-    `  </table>`,
-    `</div>`,
-  ]);
-
-  return { title: "Basic Table", preview, code, language: "jsx" };
+  return { title: "Basic Table", preview };
 }
 
 /**
@@ -189,50 +144,17 @@ function SortableTableSection() {
     </section>
   );
 
-  // The snippet represents the rendered table structure; interactive behavior is not encoded in HTML.
-  const rowsHtml = sorted
-    .map(
-      (r) =>
-        `<tr className="border-t border-gray-100">
-          <td className="px-4 py-2">${escapeHtml(r.name)}</td>
-          <td className="px-4 py-2">${escapeHtml(r.email)}</td>
-          <td className="px-4 py-2">${escapeHtml(r.role)}</td>
-        </tr>`
-    )
-    .join("\n        ");
-
-  const headerBtn = (label, active) =>
-    `<button type="button" className="inline-flex items-center hover:text-ocean-primary ${
-      active ? "text-ocean-primary" : ""
-    }">${label}<span className="ml-1 inline-block text-[#2563EB]">▲</span></button>`;
-
-  const code = buildSectionHtml([
-    `<div className="rounded-xl border border-gray-200 overflow-hidden bg-white">`,
-    `  <table className="w-full text-left text-sm">`,
-    `    <thead className="bg-gray-50">`,
-    `      <tr>`,
-    `        <th className="px-4 py-2 text-gray-700">${headerBtn("Name", sortBy === "name")}</th>`,
-    `        <th className="px-4 py-2 text-gray-700">${headerBtn("Email", sortBy === "email")}</th>`,
-    `        <th className="px-4 py-2 text-gray-700">${headerBtn("Role", sortBy === "role")}</th>`,
-    `      </tr>`,
-    `    </thead>`,
-    `    <tbody>`,
-    `        ${rowsHtml}`,
-    `    </tbody>`,
-    `  </table>`,
-    `</div>`,
-  ]);
-
-  return { title: "Sortable Table", preview, code, language: "jsx" };
+  return { title: "Sortable Table", preview };
 }
 
 /**
  * Search/Filter Table - client-side text input filters by name or email; highlight matches.
  */
 function highlight(text, query) {
-  if (!query) return escapeHtml(text);
+  const safe = String(text);
+  if (!query) return safe;
   const re = new RegExp(`(${query.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\$&")})`, "ig");
-  return escapeHtml(text).replace(re, '<mark class="bg-yellow-100 text-gray-900 rounded px-0.5">$1</mark>');
+  return safe.replace(re, '<mark class="bg-yellow-100 text-gray-900 rounded px-0.5">$1</mark>');
 }
 
 function FilteringTableSection() {
@@ -292,46 +214,7 @@ function FilteringTableSection() {
     </section>
   );
 
-  const rowsHtml =
-    filtered.length > 0
-      ? filtered
-          .map(
-            (r) =>
-              `<tr className="border-t border-gray-100">
-          <td className="px-4 py-2"><span>${highlight(r.name, q)}</span></td>
-          <td className="px-4 py-2"><span>${highlight(r.email, q)}</span></td>
-          <td className="px-4 py-2">${escapeHtml(r.role)}</td>
-        </tr>`
-          )
-          .join("\n        ")
-      : `<tr>
-          <td className="px-4 py-6 text-gray-500" colSpan={3}>No results</td>
-        </tr>`;
-
-  const code = buildSectionHtml([
-    `<div className="space-y-3">`,
-    `  <div className="flex items-center gap-2">`,
-    `    <span className="px-2 text-gray-500">🔎</span>`,
-    `    <input className="px-3 py-2 rounded-lg border border-gray-300 bg-white w-64" placeholder="Search name or email..." />`,
-    `  </div>`,
-    `  <div className="rounded-xl border border-gray-200 overflow-hidden bg-white">`,
-    `    <table className="w-full text-left text-sm">`,
-    `      <thead className="bg-gray-50">`,
-    `        <tr>`,
-    `          <th className="px-4 py-2 text-gray-700">Name</th>`,
-    `          <th className="px-4 py-2 text-gray-700">Email</th>`,
-    `          <th className="px-4 py-2 text-gray-700">Role</th>`,
-    `        </tr>`,
-    `      </thead>`,
-    `      <tbody>`,
-    `        ${rowsHtml}`,
-    `      </tbody>`,
-    `    </table>`,
-    `  </div>`,
-    `</div>`,
-  ]);
-
-  return { title: "Search/Filter Table", preview, code, language: "jsx" };
+  return { title: "Search/Filter Table", preview };
 }
 
 /**
@@ -475,70 +358,11 @@ function PaginatedSelectableTableSection() {
     </section>
   );
 
-  const rowsHtml = pageRows
-    .map((r) => {
-      const isChecked = selected.has(r.id);
-      return `<tr className="border-t border-gray-100 ${isChecked ? "bg-blue-50/40" : ""}">
-          <td className="px-4 py-2">
-            <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-blue-600" ${
-              isChecked ? "checked" : ""
-            } />
-          </td>
-          <td className="px-4 py-2">${escapeHtml(r.name)}</td>
-          <td className="px-4 py-2">${escapeHtml(r.email)}</td>
-          <td className="px-4 py-2">${escapeHtml(r.role)}</td>
-        </tr>`;
-    })
-    .join("\n        ");
-
-  const code = buildSectionHtml([
-    `<div className="flex items-center justify-between mb-3">`,
-    `  <div className="inline-flex items-center gap-2">`,
-    `    <span className="text-sm text-gray-700">Rows per page:</span>`,
-    `    <select className="px-2 py-1 rounded-lg border border-gray-300 bg-white text-sm">`,
-    `      <option>3</option><option>5</option><option>10</option>`,
-    `    </select>`,
-    `  </div>`,
-    `  <div className="inline-flex items-center gap-2">`,
-    `    <button className="px-3 py-1.5 rounded-lg border border-gray-200 bg-white text-sm">Prev</button>`,
-    `    <span className="text-sm text-gray-700">Page <span className="font-medium">${page}</span> of ${totalPages}</span>`,
-    `    <button className="px-3 py-1.5 rounded-lg border border-gray-200 bg-white text-sm">Next</button>`,
-    `  </div>`,
-    `</div>`,
-    `<div className="rounded-xl border border-gray-200 overflow-hidden bg-white">`,
-    `  <div className="flex items-center justify-between px-4 py-2 bg-gray-50 border-b border-gray-200">`,
-    `    <div className="text-sm text-gray-700">Selected:`,
-    `      <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-[#2563EB] border border-blue-200">${selected.size}</span>`,
-    `    </div>`,
-    `    <div className="text-xs text-gray-500">Showing ${start + 1}-${Math.min(
-      start + size,
-      total
-    )} of ${total}</div>`,
-    `  </div>`,
-    `  <table className="w-full text-left text-sm">`,
-    `    <thead className="bg-gray-50">`,
-    `      <tr>`,
-    `        <th className="px-4 py-2 text-gray-700 w-10"><input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-blue-600" ${
-      pageRows.every((r) => selected.has(r.id)) ? "checked" : ""
-    } /></th>`,
-    `        <th className="px-4 py-2 text-gray-700">Name</th>`,
-    `        <th className="px-4 py-2 text-gray-700">Email</th>`,
-    `        <th className="px-4 py-2 text-gray-700">Role</th>`,
-    `      </tr>`,
-    `    </thead>`,
-    `    <tbody>`,
-    `        ${rowsHtml}`,
-    `    </tbody>`,
-    `  </table>`,
-    `</div>`,
-  ]);
-
-  return { title: "Paginated + Selectable Table", preview, code, language: "jsx" };
+  return { title: "Paginated + Selectable Table", preview };
 }
 
 /**
- * Render a group of sections with shared tabs and copy feature,
- * ensuring the Code tab shows the exact section JSX string from the same source.
+ * Render a simple card to hold each table variant's live preview (no code tabs).
  */
 function SectionCard({ title, data }) {
   const { preview } = data;
@@ -577,8 +401,7 @@ export default function TablesDemo() {
 /**
  * PUBLIC_INTERFACE
  * Wrapper components for single-section rendering per catalog slug.
- * Each wrapper mounts only its corresponding section and ensures the Code tab/snippet
- * shows exactly that section (via SectionCard using the section's code field).
+ * Each wrapper mounts only its corresponding section and renders only the live preview.
  */
 
 // PUBLIC_INTERFACE
