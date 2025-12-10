@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from "react";
-import CodeViewer from "../../components/CodeViewer";
 
 /**
  * PUBLIC_INTERFACE
@@ -542,43 +541,15 @@ function PaginatedSelectableTableSection() {
  * ensuring the Code tab shows the exact section JSX string from the same source.
  */
 function SectionCard({ title, data }) {
-  const [tab, setTab] = useState("preview");
-  const { preview, code, language } = data;
+  const { preview } = data;
   return (
     <section className="space-y-3">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-        <div className="inline-flex rounded-md border border-gray-200 bg-gray-50 p-0.5">
-          <button
-            type="button"
-            onClick={() => setTab("preview")}
-            className={`px-3 py-1.5 text-sm rounded-md transition ${
-              tab === "preview" ? "bg-white text-ocean-primary shadow-sm" : "text-gray-700 hover:text-ocean-primary"
-            }`}
-            aria-pressed={tab === "preview"}
-          >
-            Preview
-          </button>
-          <button
-            type="button"
-            onClick={() => setTab("code")}
-            className={`px-3 py-1.5 text-sm rounded-md transition ${
-              tab === "code" ? "bg-white text-ocean-primary shadow-sm" : "text-gray-700 hover:text-ocean-primary"
-            }`}
-            aria-pressed={tab === "code"}
-          >
-            Code
-          </button>
-        </div>
       </div>
-
-      {tab === "preview" && (
-        <div className="rounded-xl border border-gray-100 p-6 bg-gradient-to-br from-blue-500/10 to-gray-50">{preview}</div>
-      )}
-
-      {tab === "code" && (
-        <CodeViewer code={code} language={language} initiallyOpen showCopy />
-      )}
+      <div className="rounded-xl border border-gray-100 p-6 bg-gradient-to-br from-blue-500/10 to-gray-50">
+        {preview}
+      </div>
     </section>
   );
 }

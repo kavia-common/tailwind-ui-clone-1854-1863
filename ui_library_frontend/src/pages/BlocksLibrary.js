@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Sidebar from "../components/Sidebar";
-import CodeViewer from "../components/CodeViewer";
 
 /**
  * PUBLIC_INTERFACE
@@ -770,80 +769,19 @@ function readSlugFromUrl(defaultSlug) {
 }
 
 // Preview + code card following the same tabs/format as the Hero pattern
-function BlockCard({ title, preview, code }) {
-  const [tab, setTab] = useState("preview");
-  const [copied, setCopied] = useState(false);
-
-  const copy = async () => {
-    try {
-      if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(code);
-      } else {
-        const t = document.createElement("textarea");
-        t.value = code;
-        t.setAttribute("readonly", "");
-        t.style.position = "absolute";
-        t.style.left = "-9999px";
-        document.body.appendChild(t);
-        t.select();
-        document.execCommand("copy");
-        document.body.removeChild(t);
-      }
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    } catch {
-      // eslint-disable-next-line no-alert
-      alert("Failed to copy");
-    }
-  };
-
+function BlockCard({ title, preview }) {
   return (
     <div className="bg-white rounded-2xl shadow-soft border border-gray-100 overflow-hidden transition hover:shadow-lg">
-      <div className="px-5 py-4 border-b border-gray-100 bg-gray-50/60 flex items-center justify-between">
+      <div className="px-5 py-4 border-b border-gray-100 bg-gray-50/60">
         <div>
           <h3 className="text-base font-semibold text-gray-900">{title}</h3>
-          <p className="text-sm text-gray-600 mt-1">Live preview and Tailwind Play–ready HTML snippet.</p>
-        </div>
-        <div className="inline-flex rounded-lg border border-gray-200 bg-white p-0.5">
-          <button
-            type="button"
-            onClick={() => setTab("preview")}
-            className={`px-3 py-1.5 text-sm rounded-md transition ${
-              tab === "preview" ? "bg-blue-50 text-ocean-primary" : "text-gray-700 hover:text-ocean-primary"
-            }`}
-            aria-pressed={tab === "preview"}
-          >
-            Preview
-          </button>
-          <button
-            type="button"
-            onClick={() => setTab("code")}
-            className={`px-3 py-1.5 text-sm rounded-md transition ${
-              tab === "code" ? "bg-blue-50 text-ocean-primary" : "text-gray-700 hover:text-ocean-primary"
-            }`}
-            aria-pressed={tab === "code"}
-          >
-            Code
-          </button>
         </div>
       </div>
 
       <div className="p-5">
-        {tab === "preview" && (
-          <div className="rounded-xl border border-gray-100 p-6 bg-gradient-to-br from-blue-500/10 to-gray-50">
-            {preview}
-          </div>
-        )}
-
-        {tab === "code" && (
-          <div>
-            <div className="mb-3 flex items-center justify-between">
-              <div className="text-xs text-gray-600">Tailwind Play–ready snippet (single &lt;section&gt; root)</div>
-            </div>
-
-            <CodeViewer code={code} language="html" initiallyOpen showCopy />
-          </div>
-        )}
+        <div className="rounded-xl border border-gray-100 p-6 bg-gradient-to-br from-blue-500/10 to-gray-50">
+          {preview}
+        </div>
       </div>
     </div>
   );
@@ -903,7 +841,7 @@ export default function BlocksLibrary() {
 
             <div className="grid grid-cols-1 gap-6">
               {currentDemo ? (
-                <BlockCard title={blocksList.find((b) => b.slug === selectedSlug)?.label || "Block"} preview={currentDemo.preview} code={currentDemo.html} />
+                <BlockCard title={blocksList.find((b) => b.slug === selectedSlug)?.label || "Block"} preview={currentDemo.preview} />
               ) : (
                 <div className="rounded-2xl border border-dashed border-gray-300 p-6 bg-white">
                   <h3 className="font-semibold text-gray-900">No block selected</h3>

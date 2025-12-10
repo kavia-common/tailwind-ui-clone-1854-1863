@@ -74,9 +74,8 @@ export default function ComponentsLibrary() {
               {current && (
                 <PreviewCard
                   title={current.title}
-                  description="Live preview and Tailwind Play–ready HTML snippet."
+                  description="Live preview"
                   preview={current.preview || null}
-                  code={current.htmlSnippet || ""}
                 />
               )}
 
