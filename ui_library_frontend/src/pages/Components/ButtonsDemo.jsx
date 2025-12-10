@@ -5,9 +5,10 @@ import CodeViewer from "../../components/CodeViewer";
 /**
  * PUBLIC_INTERFACE
  * ButtonsDemo renders reusable Button variants using the same <section> pattern as other components.
- * The code snippet is programmatically derived from the same JSX used in the preview, but trimmed
- * so that it only includes the root <section> element and its contents (no imports, icon consts,
- * or wrapper components). If icons are used, the snippet inlines their SVGs inside the <section>.
+ * Adds two code tabs for each group:
+ * - App: the original JSX-derived <section> snippet (kept unchanged)
+ * - Playground: a standalone, Tailwind-only HTML snippet that renders in Tailwind Play without the local Button component
+ * A short note clarifies the Playground snippet is self-contained.
  */
 export default function ButtonsDemo() {
   // Small inline icons used in previews (React elements for live preview)
@@ -23,7 +24,7 @@ export default function ButtonsDemo() {
   );
 
   /**
-   * Config describing all examples. This is the single source of truth used for both preview and snippet.
+   * Config describing all examples. This is the single source of truth used for both preview and snippets.
    * Each group has a heading, a wrapperClass applied to the inner container, and a list of Button props.
    */
   const exampleGroups = [
@@ -93,9 +94,8 @@ export default function ButtonsDemo() {
     </Button>
   );
 
-  // Serialize the same structure to an effective JSX string trimmed to the root <section>
-  // We inline icons as SVG within the section so the snippet is self-contained.
-  const serializeButton = (b) => {
+  // --- "App" snippet builder (existing behavior; keep as-is) -----------------
+  const serializeButtonApp = (b) => {
     const base =
       'className="inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 shadow-sm"';
 
@@ -141,14 +141,13 @@ export default function ButtonsDemo() {
       .filter(Boolean)
       .join(" ");
 
-    // Construct inner content
     const content = `${spinner}<span>${b.children}</span>`;
 
     return `<button className="${classes}"${disabled}${ariaDisabled}${ariaBusy}>${leftSvg}<span className="inline-flex items-center gap-2">${content}</span>${rightSvg}</button>`;
   };
 
-  const buildSectionSnippetOnly = (group) => {
-    const inner = group.buttons.map(serializeButton).join("\n        ");
+  const buildSectionSnippetApp = (group) => {
+    const inner = group.buttons.map(serializeButtonApp).join("\n        ");
     return [
       "<section>",
       `  <div className="${group.wrapperClass}">`,
@@ -158,6 +157,68 @@ export default function ButtonsDemo() {
     ].join("\n");
   };
 
+  // --- "Playground" snippet builder (pure Tailwind HTML; Tailwind Play ready) ----
+  const serializeButtonPlay = (b) => {
+    const base =
+      "inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 shadow-sm";
+
+    const size = {
+      sm: "px-3 py-1.5 text-sm",
+      md: "px-4 py-2 text-sm",
+      lg: "px-5 py-2.5 text-base",
+    }[b.size || "md"];
+
+    const variant =
+      b.variant === "secondary"
+        ? "bg-amber-500 text-white hover:bg-amber-600 focus:ring-amber-500"
+        : b.variant === "outline"
+        ? "border border-blue-600 text-blue-700 bg-transparent hover:bg-blue-50 focus:ring-blue-500"
+        : "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500";
+
+    const width = b.fullWidth ? "w-full" : "";
+    const disabled = b.disabled ? " disabled" : "";
+    const ariaDisabled = b.disabled ? ' aria-disabled="true"' : "";
+    const ariaBusy = b.loading ? ' aria-busy="true"' : "";
+
+    const spinner = b.loading
+      ? '<span class="inline-block h-4 w-4 rounded-full border-2 border-white/50 border-t-white animate-spin" aria-hidden="true"></span> '
+      : "";
+
+    const leftSvg = b.leftIcon
+      ? `<span class="mr-2 -ml-1 inline-flex items-center" aria-hidden="true">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="opacity-90">
+    <path d="M12 2a10 10 0 1 0 .001 20.001A10 10 0 0 0 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z"></path>
+  </svg>
+</span>`
+      : "";
+
+    const rightSvg = b.rightIcon
+      ? `<span class="ml-2 -mr-1 inline-flex items-center" aria-hidden="true">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="opacity-90">
+    <path d="M12 4l1.41 1.41L8.83 10H20v2H8.83l4.58 4.59L12 18l-8-8 8-8z"></path>
+  </svg>
+</span>`
+      : "";
+
+    const classes = [base, size, variant, width].filter(Boolean).join(" ");
+
+    const content = `${spinner}<span>${b.children}</span>`;
+
+    return `<button class="${classes}"${disabled}${ariaDisabled}${ariaBusy}>${leftSvg}<span class="inline-flex items-center gap-2">${content}</span>${rightSvg}</button>`;
+  };
+
+  const buildSectionSnippetPlay = (group) => {
+    const inner = group.buttons.map(serializeButtonPlay).join("\n        ");
+    return [
+      '<section class="p-0">',
+      `  <div class="${group.wrapperClass}">`,
+      `        ${inner}`,
+      "  </div>",
+      "</section>",
+    ].join("\n");
+  };
+
+  // Build sections list with both App and Playground snippets
   const sections = useMemo(() => {
     return exampleGroups.map((g) => {
       const preview = (
@@ -167,8 +228,9 @@ export default function ButtonsDemo() {
           </div>
         </section>
       );
-      const code = buildSectionSnippetOnly(g);
-      return { heading: g.heading, preview, code };
+      const codeApp = buildSectionSnippetApp(g); // unchanged JSX-like snippet
+      const codePlay = buildSectionSnippetPlay(g); // pure Tailwind HTML for Tailwind Play
+      return { heading: g.heading, preview, codeApp, codePlay };
     });
   }, []); // config is static
 
@@ -200,15 +262,19 @@ export default function ButtonsDemo() {
     return { copied, copy };
   };
 
-  // Inline section renderer matching the library's Preview/Code tabs UI and spacing
-  const SnippetSection = ({ heading, preview, code }) => {
+  // Inline section renderer with tabs: Preview | Code (App | Playground)
+  const SnippetSection = ({ heading, preview, codeApp, codePlay }) => {
     const [tab, setTab] = useState("preview");
+    const [codeTab, setCodeTab] = useState("app"); // 'app' or 'play'
     const { copied, copy } = useCopy();
+
+    const currentCode = codeTab === "play" ? codePlay : codeApp;
+    const currentLang = codeTab === "play" ? "html" : "jsx";
 
     const CopyBtn = (
       <button
         type="button"
-        onClick={() => copy(code)}
+        onClick={() => copy(currentCode)}
         className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-gray-200 bg-white/90 text-gray-700 hover:bg-white hover:shadow-sm transition ${
           copied ? "ring-2 ring-blue-500/30" : ""
         }`}
@@ -269,9 +335,45 @@ export default function ButtonsDemo() {
 
         {tab === "code" && (
           <div className="mt-3">
-            <div className="mb-3 flex items-center justify-end">{CopyBtn}</div>
-            {/* Show only the <section>…</section> snippet. Keep JSX language for highlighting. */}
-            <CodeViewer code={code} language="jsx" initiallyOpen />
+            {/* Secondary tabs: App | Playground */}
+            <div className="mb-3 flex items-center justify-between">
+              <div className="inline-flex rounded-md border border-gray-200 bg-gray-50 p-0.5">
+                <button
+                  type="button"
+                  onClick={() => setCodeTab("app")}
+                  className={`px-3 py-1.5 text-sm rounded-md transition ${
+                    codeTab === "app" ? "bg-white text-ocean-primary shadow-sm" : "text-gray-700 hover:text-ocean-primary"
+                  }`}
+                  aria-pressed={codeTab === "app"}
+                  title="App code derived from the JSX <section>"
+                >
+                  App
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCodeTab("play")}
+                  className={`px-3 py-1.5 text-sm rounded-md transition ${
+                    codeTab === "play"
+                      ? "bg-white text-ocean-primary shadow-sm"
+                      : "text-gray-700 hover:text-ocean-primary"
+                  }`}
+                  aria-pressed={codeTab === "play"}
+                  title="Standalone Tailwind-only code for Tailwind Play"
+                >
+                  Playground
+                </button>
+              </div>
+              {CopyBtn}
+            </div>
+
+            {/* Short note for Playground snippet */}
+            {codeTab === "play" && (
+              <div className="mb-2 text-xs text-gray-600">
+                Note: This Playground snippet is standalone Tailwind markup and should render directly in Tailwind Play.
+              </div>
+            )}
+
+            <CodeViewer code={currentCode} language={currentLang} initiallyOpen />
           </div>
         )}
       </section>
@@ -281,7 +383,13 @@ export default function ButtonsDemo() {
   return (
     <div className="space-y-8">
       {sections.map((s) => (
-        <SnippetSection key={s.heading} heading={s.heading} preview={s.preview} code={s.code} />
+        <SnippetSection
+          key={s.heading}
+          heading={s.heading}
+          preview={s.preview}
+          codeApp={s.codeApp}
+          codePlay={s.codePlay}
+        />
       ))}
     </div>
   );
