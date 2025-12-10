@@ -866,7 +866,7 @@ function BlockCard({ title, preview, code }) {
               </button>
             </div>
 
-            <CodeViewer code={code} language="html" initiallyOpen />
+            <CodeViewer code={code} language="html" initiallyOpen showCopy />
           </div>
         )}
       </div>

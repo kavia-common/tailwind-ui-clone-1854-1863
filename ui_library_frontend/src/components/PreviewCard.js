@@ -205,7 +205,7 @@ export default function PreviewCard({ title, description, preview, code }) {
               </button>
             </div>
 
-            <CodeViewer code={htmlSnippet} language="html" initiallyOpen />
+            <CodeViewer code={htmlSnippet} language="html" initiallyOpen showCopy />
           </div>
         )}
       </div>
