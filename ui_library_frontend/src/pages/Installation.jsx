@@ -65,6 +65,86 @@ npm run build
             </header>
 
             <section className="space-y-6">
+              {/* Tailwind CLI quick start - placed near the top as requested */}
+              <div className="rounded-2xl bg-white border border-gray-100 p-6">
+                <h2 className="text-xl font-semibold text-gray-900">Tailwind CSS (CLI quick start)</h2>
+                <p className="mt-2 text-gray-700">
+                  You can use Tailwind via its standalone CLI without installing Node if you prefer.
+                  The steps below show the CLI setup. In this project we already ship Tailwind via PostCSS,
+                  so this is provided for reference and for standalone usage.
+                </p>
+                <ol className="mt-4 list-decimal pl-6 space-y-3 text-gray-800">
+                  <li>
+                    Download the Tailwind CSS standalone CLI for your platform.
+                    <pre className="mt-3 overflow-x-auto code-scrollbar">
+                      <code className="block whitespace-pre rounded-xl border border-gray-200 bg-gray-900 p-4 text-gray-100 text-sm">
+{`# macOS (arm64)
+curl -sLO https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-macos-arm64
+chmod +x tailwindcss-macos-arm64
+mv tailwindcss-macos-arm64 tailwindcss
+
+# macOS (x64)
+curl -sLO https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-macos-x64
+chmod +x tailwindcss-macos-x64
+mv tailwindcss-macos-x64 tailwindcss
+
+# Linux (x64)
+curl -sLO https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-linux-x64
+chmod +x tailwindcss-linux-x64
+mv tailwindcss-linux-x64 tailwindcss
+
+# Windows (PowerShell)
+Invoke-WebRequest -Uri "https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-windows-x64.exe" -OutFile "tailwindcss.exe"`}
+                      </code>
+                    </pre>
+                  </li>
+                  <li>
+                    Create a minimal Tailwind input CSS file (for example at <span className="font-mono">./src/input.css</span>).
+                    <pre className="mt-3 overflow-x-auto code-scrollbar">
+                      <code className="block whitespace-pre rounded-xl border border-gray-200 bg-gray-900 p-4 text-gray-100 text-sm">
+{`/* src/input.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;`}
+                      </code>
+                    </pre>
+                  </li>
+                  <li>
+                    Generate your output CSS by running the CLI and watching for changes.
+                    <pre className="mt-3 overflow-x-auto code-scrollbar">
+                      <code className="block whitespace-pre rounded-xl border border-gray-200 bg-gray-900 p-4 text-gray-100 text-sm">
+{`# From the project root where the tailwindcss binary exists
+./tailwindcss -i ./src/input.css -o ./src/index.css --watch`}
+                      </code>
+                    </pre>
+                    <p className="mt-2 text-sm text-gray-600">
+                      This will compile Tailwind classes it finds in your template files (React components, HTML, etc.)
+                      into the specified output file and rebuild on file changes.
+                    </p>
+                  </li>
+                  <li>
+                    Ensure your templates are included in your Tailwind config content paths.
+                    <pre className="mt-3 overflow-x-auto code-scrollbar">
+                      <code className="block whitespace-pre rounded-xl border border-gray-200 bg-gray-900 p-4 text-gray-100 text-sm">
+{`// tailwind.config.js
+module.exports = {
+  content: [
+    "./public/index.html",
+    "./src/**/*.{js,jsx,ts,tsx}",
+  ],
+  theme: { extend: {} },
+  plugins: [],
+};`}
+                      </code>
+                    </pre>
+                  </li>
+                </ol>
+                <p className="mt-4 text-sm text-gray-600">
+                  Note: In this repository we already use Tailwind via PostCSS with Create React App, so you
+                  can simply run <span className="font-mono">npm install</span> and <span className="font-mono">npm start</span>.
+                  Use the standalone CLI path above if you want a Node-less Tailwind workflow.
+                </p>
+              </div>
               <div className="rounded-2xl bg-white border border-gray-100 p-6">
                 <h2 className="text-xl font-semibold text-gray-900">Prerequisites</h2>
                 <ul className="mt-3 list-disc pl-6 text-gray-700 space-y-1">
