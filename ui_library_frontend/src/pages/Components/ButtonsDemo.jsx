@@ -158,9 +158,17 @@ export default function ButtonsDemo() {
   };
 
   // --- "Playground" snippet builder (pure Tailwind HTML; Tailwind Play ready) ----
+  // Uses only Tailwind core utilities:
+  // - Colors: bg-blue-600 hover:bg-blue-700 text-white, bg-amber-500 hover:bg-amber-600, text-blue-700, etc.
+  // - Focus: focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-*-500
+  // - Disabled: disabled:opacity-50 disabled:cursor-not-allowed
+  // - Loading: inline spinner with border utilities (no plugins)
+  // - Icons: inline SVG inside <button>
+  // - Single <section> root wrapper
+  // Minimal Tailwind Play config note is embedded as an HTML comment inside the section.
   const serializeButtonPlay = (b) => {
     const base =
-      "inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 shadow-sm";
+      "inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm";
 
     const size = {
       sm: "px-3 py-1.5 text-sm",
@@ -209,8 +217,11 @@ export default function ButtonsDemo() {
 
   const buildSectionSnippetPlay = (group) => {
     const inner = group.buttons.map(serializeButtonPlay).join("\n        ");
+    // Include a minimal, non-invasive HTML comment with Tailwind Play note
+    // and ensure a single <section> wrapper.
     return [
       '<section class="p-0">',
+      '  <!-- Tailwind Play note: This snippet uses only core utilities. No plugins required. -->',
       `  <div class="${group.wrapperClass}">`,
       `        ${inner}`,
       "  </div>",
