@@ -383,7 +383,12 @@ export default function ButtonsDemo() {
               </div>
             )}
 
-            <CodeViewer code={currentCode} language={currentLang} initiallyOpen />
+            <CodeViewer
+              code={currentCode}
+              language={currentLang}
+              initiallyOpen
+              showCopy
+            />
           </div>
         )}
       </section>
