@@ -438,15 +438,108 @@ const POverlays = () => (
     <div className="mt-2 rounded-lg border border-gray-200 bg-white p-3 text-sm text-gray-700">Overlay content</div>
   </div>
 );
-const PDropdown = () => (
-  <div className="relative">
-    <button className="px-3 py-2 rounded-lg border border-gray-200 bg-white">Menu</button>
-    <div className="mt-2 w-40 rounded-lg border border-gray-200 bg-white shadow p-1 text-sm">
-      <a href="#1" className="block px-3 py-2 rounded hover:bg-gray-50">Item A</a>
-      <a href="#2" className="block px-3 py-2 rounded hover:bg-gray-50">Item B</a>
+const PDropdown = () => {
+  // Interactive dropdown with keyboard and outside-click handling
+  const [open, setOpen] = React.useState(false);
+  const buttonRef = React.useRef(null);
+  const menuRef = React.useRef(null);
+  const firstItemRef = React.useRef(null);
+
+  // Close on outside click
+  React.useEffect(() => {
+    function onDocClick(e) {
+      if (!open) return;
+      const b = buttonRef.current;
+      const m = menuRef.current;
+      if (b && b.contains(e.target)) return;
+      if (m && m.contains(e.target)) return;
+      setOpen(false);
+    }
+    document.addEventListener("mousedown", onDocClick);
+    return () => document.removeEventListener("mousedown", onDocClick);
+  }, [open]);
+
+  // Close on Escape and move focus back to button
+  React.useEffect(() => {
+    function onKey(e) {
+      if (!open) return;
+      if (e.key === "Escape") {
+        e.preventDefault();
+        setOpen(false);
+        // Return focus to trigger
+        setTimeout(() => buttonRef.current?.focus(), 0);
+      }
+    }
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  // Focus first item when opening
+  React.useEffect(() => {
+    if (open) {
+      const id = setTimeout(() => {
+        firstItemRef.current?.focus();
+      }, 0);
+      return () => clearTimeout(id);
+    }
+  }, [open]);
+
+  return (
+    <div className="relative inline-block text-left">
+      <button
+        ref={buttonRef}
+        type="button"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        onClick={() => setOpen((v) => !v)}
+        className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 bg-white text-gray-800 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+      >
+        Menu
+        <svg className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`} viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clipRule="evenodd" />
+        </svg>
+      </button>
+
+      {open && (
+        <div
+          ref={menuRef}
+          role="menu"
+          aria-label="Dropdown menu"
+          className="absolute left-0 mt-2 w-44 rounded-lg border border-gray-200 bg-white shadow-lg p-1 text-sm z-10"
+        >
+          <a
+            href="#"
+            ref={firstItemRef}
+            role="menuitem"
+            tabIndex={0}
+            className="block px-3 py-2 rounded hover:bg-gray-50 focus:bg-gray-50 focus:outline-none"
+            onClick={() => setOpen(false)}
+          >
+            Item A
+          </a>
+          <a
+            href="#"
+            role="menuitem"
+            tabIndex={0}
+            className="block px-3 py-2 rounded hover:bg-gray-50 focus:bg-gray-50 focus:outline-none"
+            onClick={() => setOpen(false)}
+          >
+            Item B
+          </a>
+          <a
+            href="#"
+            role="menuitem"
+            tabIndex={0}
+            className="block px-3 py-2 rounded hover:bg-gray-50 focus:bg-gray-50 focus:outline-none"
+            onClick={() => setOpen(false)}
+          >
+            Item C
+          </a>
+        </div>
+      )}
     </div>
-  </div>
-);
+  );
+};
 const PContext = () => (
   <div className="rounded-lg border border-gray-200 bg-white p-4">Right-click menu example</div>
 );
@@ -1115,11 +1208,15 @@ const catalog = [
   </div>
       `) },
       { slug: "dropdown", title: "Dropdown", htmlSnippet: shell(`
-  <div class="relative">
-    <button class="px-3 py-2 rounded-lg border border-gray-200 bg-white">Menu</button>
-    <div class="mt-2 w-40 rounded-lg border border-gray-200 bg-white shadow p-1 text-sm">
+  <div class="relative inline-block text-left">
+    <button class="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 bg-white text-gray-800">
+      Menu
+      <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd"/></svg>
+    </button>
+    <div class="absolute left-0 mt-2 w-44 rounded-lg border border-gray-200 bg-white shadow p-1 text-sm">
       <a href="#" class="block px-3 py-2 rounded hover:bg-gray-50">Item A</a>
       <a href="#" class="block px-3 py-2 rounded hover:bg-gray-50">Item B</a>
+      <a href="#" class="block px-3 py-2 rounded hover:bg-gray-50">Item C</a>
     </div>
   </div>
       `) },
