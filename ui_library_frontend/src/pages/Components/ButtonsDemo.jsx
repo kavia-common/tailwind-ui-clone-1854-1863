@@ -5,11 +5,12 @@ import CodeViewer from "../../components/CodeViewer";
 /**
  * PUBLIC_INTERFACE
  * ButtonsDemo renders reusable Button variants using the same <section> pattern as other components.
- * The code snippet is programmatically derived from the same JSX structure used to render the preview,
- * ensuring exact parity. It follows the same Preview/Code tabs and header layout convention.
+ * The code snippet is programmatically derived from the same JSX used in the preview, but trimmed
+ * so that it only includes the root <section> element and its contents (no imports, icon consts,
+ * or wrapper components). If icons are used, the snippet inlines their SVGs inside the <section>.
  */
 export default function ButtonsDemo() {
-  // Small inline icons used in examples (same instances used for preview and code generation)
+  // Small inline icons used in previews (React elements for live preview)
   const LeftIcon = (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="opacity-90">
       <path d="M12 2a10 10 0 1 0 .001 20.001A10 10 0 0 0 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z" />
@@ -29,49 +30,45 @@ export default function ButtonsDemo() {
     {
       heading: "Primary",
       wrapperClass: "flex flex-wrap items-center gap-3",
-      importPath: "@/components/ui",
       buttons: [
         { size: "sm", variant: "primary", children: "Small" },
         { size: "md", variant: "primary", children: "Medium" },
         { size: "lg", variant: "primary", children: "Large" },
         { size: "md", variant: "primary", disabled: true, children: "Disabled" },
         { size: "md", variant: "primary", loading: true, children: "Loading" },
-        { size: "md", variant: "primary", leftIcon: "LeftIcon", children: "With Left Icon" },
-        { size: "md", variant: "primary", rightIcon: "RightIcon", children: "With Right Icon" },
+        { size: "md", variant: "primary", leftIcon: true, children: "With Left Icon" },
+        { size: "md", variant: "primary", rightIcon: true, children: "With Right Icon" },
       ],
     },
     {
       heading: "Secondary",
       wrapperClass: "flex flex-wrap items-center gap-3",
-      importPath: "@/components/ui",
       buttons: [
         { size: "sm", variant: "secondary", children: "Small" },
         { size: "md", variant: "secondary", children: "Medium" },
         { size: "lg", variant: "secondary", children: "Large" },
         { size: "md", variant: "secondary", disabled: true, children: "Disabled" },
         { size: "md", variant: "secondary", loading: true, children: "Loading" },
-        { size: "md", variant: "secondary", leftIcon: "LeftIcon", children: "With Left Icon" },
-        { size: "md", variant: "secondary", rightIcon: "RightIcon", children: "With Right Icon" },
+        { size: "md", variant: "secondary", leftIcon: true, children: "With Left Icon" },
+        { size: "md", variant: "secondary", rightIcon: true, children: "With Right Icon" },
       ],
     },
     {
       heading: "Outline",
       wrapperClass: "flex flex-wrap items-center gap-3",
-      importPath: "@/components/ui",
       buttons: [
         { size: "sm", variant: "outline", children: "Small" },
         { size: "md", variant: "outline", children: "Medium" },
         { size: "lg", variant: "outline", children: "Large" },
         { size: "md", variant: "outline", disabled: true, children: "Disabled" },
         { size: "md", variant: "outline", loading: true, children: "Loading" },
-        { size: "md", variant: "outline", leftIcon: "LeftIcon", children: "With Left Icon" },
-        { size: "md", variant: "outline", rightIcon: "RightIcon", children: "With Right Icon" },
+        { size: "md", variant: "outline", leftIcon: true, children: "With Left Icon" },
+        { size: "md", variant: "outline", rightIcon: true, children: "With Right Icon" },
       ],
     },
     {
       heading: "Full Width",
       wrapperClass: "space-y-3",
-      importPath: "@/components/ui",
       buttons: [
         { size: "md", variant: "primary", fullWidth: true, children: "Primary full width" },
         { size: "md", variant: "secondary", fullWidth: true, children: "Secondary full width" },
@@ -80,20 +77,7 @@ export default function ButtonsDemo() {
     },
   ];
 
-  // Strict prop order helper used for both rendering (props order not visible) and snippet generation (visible)
-  const propsInOrder = (b) => {
-    const ordered = [];
-    if (b.size) ordered.push(['size', `"${b.size}"`]);
-    if (b.variant) ordered.push(['variant', `"${b.variant}"`]);
-    if (b.disabled) ordered.push(['disabled', null]);
-    if (b.loading) ordered.push(['loading', null]);
-    if (b.fullWidth) ordered.push(['fullWidth', null]);
-    if (b.leftIcon) ordered.push(['leftIcon', '{LeftIcon}']);
-    if (b.rightIcon) ordered.push(['rightIcon', '{RightIcon}']);
-    return ordered;
-  };
-
-  // Live preview renderer
+  // Live preview renderer (unchanged)
   const renderBtn = (cfg, idx) => (
     <Button
       key={idx}
@@ -109,52 +93,71 @@ export default function ButtonsDemo() {
     </Button>
   );
 
-  // Programmatically derive the JSX snippet from the same configuration and ensure <section> wrapper
-  const buildSectionJsxSnippet = (group) => {
-    const importLine = `import { Button } from "${group.importPath}";`;
+  // Serialize the same structure to an effective JSX string trimmed to the root <section>
+  // We inline icons as SVG within the section so the snippet is self-contained.
+  const serializeButton = (b) => {
+    const base =
+      'className="inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 shadow-sm"';
 
-    // Only include icons if any button needs them
-    const needsIcons = group.buttons.some((b) => b.leftIcon || b.rightIcon);
-    const iconBlock = needsIcons
-      ? `const LeftIcon = (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 2a10 10 0 1 0 .001 20.001A10 10 0 0 0 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z" />
-  </svg>
-);
+    const size = {
+      sm: "px-3 py-1.5 text-sm",
+      md: "px-4 py-2 text-sm",
+      lg: "px-5 py-2.5 text-base",
+    }[b.size || "md"];
 
-const RightIcon = (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 4l1.41 1.41L8.83 10H20v2H8.83l4.58 4.59L12 18l-8-8 8-8z" />
-  </svg>
-);`
+    const variant =
+      b.variant === "secondary"
+        ? "bg-amber-500 text-white hover:bg-amber-600 focus:ring-amber-500"
+        : b.variant === "outline"
+        ? "border border-blue-600 text-blue-700 bg-transparent hover:bg-blue-50 focus:ring-blue-500"
+        : "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500";
+
+    const width = b.fullWidth ? "w-full" : "";
+    const disabled = b.disabled ? " disabled" : "";
+    const ariaDisabled = b.disabled ? ' aria-disabled={true}' : "";
+    const ariaBusy = b.loading ? ' aria-busy={true}' : "";
+
+    const spinner = b.loading
+      ? '<span className="inline-block h-4 w-4 rounded-full border-2 border-white/50 border-t-white animate-spin" aria-hidden="true" /> '
       : "";
 
-    const buttonLine = (b) => {
-      const parts = propsInOrder(b).map(([k, v]) => (v === null ? k : `${k}=${v}`));
-      const propsStr = parts.length ? " " + parts.join(" ") : "";
-      return `        <Button${propsStr}>${b.children}</Button>`;
-    };
+    const leftSvg = b.leftIcon
+      ? `<span className="mr-2 -ml-1 inline-flex items-center" aria-hidden="true">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="opacity-90">
+    <path d="M12 2a10 10 0 1 0 .001 20.001A10 10 0 0 0 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z" />
+  </svg>
+</span>`
+      : "";
 
-    // The derived snippet follows the same <section> ... <div className={wrapperClass}> ... pattern
-    const lines = [
-      importLine,
-      "",
-      ...(iconBlock ? [iconBlock, ""] : []),
-      "export function Example() {",
-      "  return (",
-      '    <section>',
-      `      <div className="${group.wrapperClass}">`,
-      ...group.buttons.map(buttonLine),
-      "      </div>",
-      "    </section>",
-      "  );",
-      "}",
-    ];
+    const rightSvg = b.rightIcon
+      ? `<span className="ml-2 -mr-1 inline-flex items-center" aria-hidden="true">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="opacity-90">
+    <path d="M12 4l1.41 1.41L8.83 10H20v2H8.83l4.58 4.59L12 18l-8-8 8-8z" />
+  </svg>
+</span>`
+      : "";
 
-    return lines.join("\n").trim();
+    const classes = [base.replace('className="', "").replace('"', ""), size, variant, width]
+      .filter(Boolean)
+      .join(" ");
+
+    // Construct inner content
+    const content = `${spinner}<span>${b.children}</span>`;
+
+    return `<button className="${classes}"${disabled}${ariaDisabled}${ariaBusy}>${leftSvg}<span className="inline-flex items-center gap-2">${content}</span>${rightSvg}</button>`;
   };
 
-  // Build memoized sections with preview JSX and the derived code string
+  const buildSectionSnippetOnly = (group) => {
+    const inner = group.buttons.map(serializeButton).join("\n        ");
+    return [
+      "<section>",
+      `  <div className="${group.wrapperClass}">`,
+      `        ${inner}`,
+      "  </div>",
+      "</section>",
+    ].join("\n");
+  };
+
   const sections = useMemo(() => {
     return exampleGroups.map((g) => {
       const preview = (
@@ -164,11 +167,10 @@ const RightIcon = (
           </div>
         </section>
       );
-      const code = buildSectionJsxSnippet(g);
+      const code = buildSectionSnippetOnly(g);
       return { heading: g.heading, preview, code };
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // configs are static
+  }, []); // config is static
 
   // Reusable copy hook (pattern consistent with PreviewCard behavior)
   const useCopy = () => {
@@ -210,8 +212,8 @@ const RightIcon = (
         className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-gray-200 bg-white/90 text-gray-700 hover:bg-white hover:shadow-sm transition ${
           copied ? "ring-2 ring-blue-500/30" : ""
         }`}
-        aria-label="Copy JSX snippet"
-        title="Copy JSX snippet"
+        aria-label="Copy section snippet"
+        title="Copy section snippet"
       >
         <svg
           width="16"
@@ -268,6 +270,7 @@ const RightIcon = (
         {tab === "code" && (
           <div className="mt-3">
             <div className="mb-3 flex items-center justify-end">{CopyBtn}</div>
+            {/* Show only the <section>…</section> snippet. Keep JSX language for highlighting. */}
             <CodeViewer code={code} language="jsx" initiallyOpen />
           </div>
         )}
