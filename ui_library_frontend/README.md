@@ -1,82 +1,36 @@
-# Lightweight React Template for KAVIA
+# Ocean UI Library (React + Tailwind)
 
-This project provides a minimal React template with a clean, modern UI and minimal dependencies.
+A Tailwind UI-like library built with Create React App and Tailwind CSS (via PostCSS). Features a fixed top navbar, three pages (Home, Components, UI Blocks), persistent collapsible left sidebar, preview cards, and toggleable code viewers with syntax highlighting.
 
-## Features
+## Scripts
 
-- **Lightweight**: No heavy UI frameworks - uses only vanilla CSS and React
-- **Modern UI**: Clean, responsive design with KAVIA brand styling
-- **Fast**: Minimal dependencies for quick loading times
-- **Simple**: Easy to understand and modify
+- `npm start` – Start development server on port 3000
+- `npm test` – Run tests
+- `npm run build` – Build production bundle
 
-## Getting Started
+No manual tailwind CLI invocation is needed; react-scripts picks up Tailwind via postcss.config.js.
 
-In the project directory, you can run:
+## Theming
 
-### `npm start`
+Ocean Professional theme:
+- Primary: `#2563EB`
+- Secondary/Success: `#F59E0B`
+- Error: `#EF4444`
+- Background: `#f9fafb`
+- Surface: `#ffffff`
+- Text: `#111827`
 
-Runs the app in development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Tailwind utilities and a subtle gradient are used for accents.
 
-### `npm test`
+## Environment Variables
 
-Launches the test runner in interactive watch mode.
+The app safely reads these if provided:
+REACT_APP_API_BASE, REACT_APP_BACKEND_URL, REACT_APP_FRONTEND_URL, REACT_APP_WS_URL, REACT_APP_NODE_ENV
 
-### `npm run build`
+No ports are hard-coded; use REACT_APP_API_BASE for any API base URL.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Structure
 
-## Customization
+- `src/pages`: Home, ComponentsLibrary, BlocksLibrary
+- `src/components`: Navbar (in App), Sidebar, PreviewCard, CodeViewer, samples
 
-### Colors
-
-The main brand colors are defined as CSS variables in `src/App.css`:
-
-```css
-:root {
-  --kavia-orange: #E87A41;
-  --kavia-dark: #1A1A1A;
-  --text-color: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --border-color: rgba(255, 255, 255, 0.1);
-}
-```
-
-### Components
-
-This template uses pure HTML/CSS components instead of a UI framework. You can find component styles in `src/App.css`. 
-
-Common components include:
-- Buttons (`.btn`, `.btn-large`)
-- Container (`.container`)
-- Navigation (`.navbar`)
-- Typography (`.title`, `.subtitle`, `.description`)
-
-## Learn More
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
