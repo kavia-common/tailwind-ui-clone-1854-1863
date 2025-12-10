@@ -55,14 +55,15 @@ ${inner}
     });
 
     return {
+      // Hero: leave as-is, matches existing pattern
       "hero-section": make(
         `
   <div class="mx-auto max-w-3xl text-center">
     <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">Build faster with Ocean UI</h1>
     <p class="mt-3 text-gray-700">Beautiful, accessible components for React + Tailwind.</p>
     <div class="mt-6 flex items-center justify-center gap-3">
-      <a href="#" class="px-4 py-2 rounded-lg bg-[#2563EB] text-white shadow hover:shadow-md">Get started</a>
-      <a href="#" class="px-4 py-2 rounded-lg bg-white border border-gray-200 text-gray-800 hover:shadow">Live demo</a>
+      <a href="#start" class="px-4 py-2 rounded-lg bg-[#2563EB] text-white shadow hover:shadow-md">Get started</a>
+      <a href="#demo" class="px-4 py-2 rounded-lg bg-white border border-gray-200 text-gray-800 hover:shadow">Live demo</a>
     </div>
   </div>
         `,
@@ -91,7 +92,7 @@ ${inner}
       <h2 class="text-xl font-semibold text-gray-900">Ready to dive in?</h2>
       <p class="mt-2 text-gray-700">Start building with Ocean UI today.</p>
       <div class="mt-4">
-        <a href="#" class="px-4 py-2 rounded-lg bg-[#2563EB] text-white shadow hover:shadow-md">Create account</a>
+        <a href="#create" class="px-4 py-2 rounded-lg bg-[#2563EB] text-white shadow hover:shadow-md">Create account</a>
       </div>
     </div>
   </div>
@@ -123,7 +124,7 @@ ${inner}
         <li>Basic components</li>
         <li>Email support</li>
       </ul>
-      <a href="#" class="mt-4 inline-block px-4 py-2 rounded-lg bg-[#2563EB] text-white">Choose</a>
+      <a href="#choose" class="mt-4 inline-block px-4 py-2 rounded-lg bg-[#2563EB] text-white">Choose</a>
     </div>
     <div class="rounded-xl bg-white border border-gray-200 p-5">
       <div class="font-semibold text-gray-900">Pro</div>
@@ -132,7 +133,7 @@ ${inner}
         <li>All components</li>
         <li>Priority support</li>
       </ul>
-      <a href="#" class="mt-4 inline-block px-4 py-2 rounded-lg bg-[#2563EB] text-white">Choose</a>
+      <a href="#choose" class="mt-4 inline-block px-4 py-2 rounded-lg bg-[#2563EB] text-white">Choose</a>
     </div>
     <div class="rounded-xl bg-white border border-gray-200 p-5">
       <div class="font-semibold text-gray-900">Teams</div>
@@ -141,7 +142,7 @@ ${inner}
         <li>Unlimited seats</li>
         <li>SLA support</li>
       </ul>
-      <a href="#" class="mt-4 inline-block px-4 py-2 rounded-lg bg-[#2563EB] text-white">Choose</a>
+      <a href="#choose" class="mt-4 inline-block px-4 py-2 rounded-lg bg-[#2563EB] text-white">Choose</a>
     </div>
   </div>
         `,
@@ -293,9 +294,9 @@ ${inner}
     <div class="flex flex-col md:flex-row items-center justify-between gap-3">
       <div>&copy; 2025 Ocean UI. All rights reserved.</div>
       <div class="space-x-4">
-        <a href="#">Docs</a>
-        <a href="#">Privacy</a>
-        <a href="#">Contact</a>
+        <a href="#d">Docs</a>
+        <a href="#p">Privacy</a>
+        <a href="#c">Contact</a>
       </div>
     </div>
   </footer>
@@ -321,8 +322,8 @@ ${inner}
   <div class="relative">
     <button class="px-4 py-2 rounded-lg border border-gray-200 bg-white">Open flyout</button>
     <div class="mt-2 w-56 rounded-xl border border-gray-200 bg-white shadow p-2">
-      <a href="#" class="block px-3 py-2 rounded hover:bg-gray-50">Settings</a>
-      <a href="#" class="block px-3 py-2 rounded hover:bg-gray-50">Profile</a>
+      <a href="#s" class="block px-3 py-2 rounded hover:bg-gray-50">Settings</a>
+      <a href="#p" class="block px-3 py-2 rounded hover:bg-gray-50">Profile</a>
     </div>
   </div>
         `,
@@ -402,9 +403,9 @@ ${inner}
   <header class="rounded-xl bg-white border border-gray-200 p-4 flex items-center justify-between">
     <div class="h-8 w-8 rounded-lg bg-gradient-to-br from-[#2563EB] to-[#F59E0B]"></div>
     <nav class="flex items-center gap-4 text-sm">
-      <a href="#" class="text-gray-700 hover:text-[#2563EB]">Docs</a>
-      <a href="#" class="text-gray-700 hover:text-[#2563EB]">Blog</a>
-      <a href="#" class="px-3 py-1.5 rounded-lg bg-[#2563EB] text-white">Sign in</a>
+      <a href="#d" class="text-gray-700 hover:text-[#2563EB]">Docs</a>
+      <a href="#b" class="text-gray-700 hover:text-[#2563EB]">Blog</a>
+      <a href="#s" class="px-3 py-1.5 rounded-lg bg-[#2563EB] text-white">Sign in</a>
     </nav>
   </header>
         `,
@@ -572,7 +573,7 @@ ${inner}
   <div class="mx-auto max-w-2xl text-center">
     <div class="text-6xl font-bold text-gray-900">404</div>
     <p class="mt-2 text-gray-700">Sorry, we couldn't find that page.</p>
-    <a href="#" class="mt-4 inline-block px-4 py-2 rounded-lg bg-[#2563EB] text-white">Go home</a>
+    <a href="#home" class="mt-4 inline-block px-4 py-2 rounded-lg bg-[#2563EB] text-white">Go home</a>
   </div>
         `,
         (
@@ -592,7 +593,7 @@ ${inner}
     <div class="rounded-2xl bg-white border border-gray-200 p-8 text-center">
       <h1 class="text-3xl font-bold text-gray-900">Ocean UI for teams</h1>
       <p class="mt-2 text-gray-700">Build polished products faster.</p>
-      <a href="#" class="mt-4 inline-block px-4 py-2 rounded-lg bg-[#2563EB] text-white">Start free trial</a>
+      <a href="#trial" class="mt-4 inline-block px-4 py-2 rounded-lg bg-[#2563EB] text-white">Start free trial</a>
     </div>
   </div>
         `,
