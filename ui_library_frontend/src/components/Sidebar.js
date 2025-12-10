@@ -15,21 +15,21 @@ export default function Sidebar({ title = "Categories", categories = [], onSelec
   const isGrouped = Array.isArray(categories) && categories.some((c) => Array.isArray(c.items));
 
   const handleClick = (group, item) => {
-    // If onSelect provided, forward data up (useful for pages)
+    // Forward selection up (pass slug for item-level selection)
     if (onSelect) {
-      onSelect(item ? { ...item, group } : group);
+      if (item?.slug) onSelect(item.slug);
+      else onSelect(group);
     }
-    // Navigate to hash anchor if available
-    if (item?.slug && group?.key) {
-      const id = `${group.key}__${item.slug}`;
-      const el = document.getElementById(id);
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth", block: "start" });
-        // Update hash to be shareable
-        if (typeof window !== "undefined") {
-          window.history.replaceState(null, "", `#${id}`);
-        }
+
+    // Update URL for shareable selection and scroll to top of content
+    if (typeof window !== "undefined") {
+      if (item?.slug) {
+        const url = new URL(window.location.href);
+        url.searchParams.set("item", item.slug);
+        window.history.replaceState(null, "", url.toString());
       }
+      // smooth scroll to top of main content
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
