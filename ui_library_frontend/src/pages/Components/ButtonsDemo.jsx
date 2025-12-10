@@ -5,9 +5,11 @@ import CodeViewer from "../../components/CodeViewer";
 /**
  * PUBLIC_INTERFACE
  * ButtonsDemo displays the reusable Button component variants and sizes,
- * and shows an exact JSX code snippet per section with copyable, syntax-highlighted code.
+ * and shows JSX code snippets that are generated from the exact same data used to render the preview.
+ * This guarantees 1:1 parity between what users see and what they copy.
  */
 export default function ButtonsDemo() {
+  // Icons used in examples
   const LeftIcon = (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="opacity-90">
       <path d="M12 2a10 10 0 1 0 .001 20.001A10 10 0 0 0 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z" />
@@ -15,15 +17,94 @@ export default function ButtonsDemo() {
   );
   const RightIcon = (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="opacity-90">
-      <path d="M12 4l1.41 1.41L8.83 10H20v2H8.83l4.58 4.59L12 18l-8-8 8-8z" />
+    <path d="M12 4l1.41 1.41L8.83 10H20v2H8.83l4.58 4.59L12 18l-8-8 8-8z" />
     </svg>
   );
 
-  // Build exact JSX snippets that match the live examples below.
-  const primaryCode = `
-import { Button } from "@/components/ui";
+  /**
+   * Define a single source of truth for all examples.
+   * Each group has:
+   * - heading: section title
+   * - wrapperClass: container className for the buttons within the preview <section>
+   * - buttons: ordered list of Button props and inner text
+   */
+  const exampleGroups = [
+    {
+      heading: "Primary",
+      wrapperClass: "flex flex-wrap items-center gap-3",
+      importPath: "@/components/ui",
+      buttons: [
+        { size: "sm", variant: "primary", children: "Small" },
+        { size: "md", variant: "primary", children: "Medium" },
+        { size: "lg", variant: "primary", children: "Large" },
+        { size: "md", variant: "primary", disabled: true, children: "Disabled" },
+        { size: "md", variant: "primary", loading: true, children: "Loading" },
+        { size: "md", variant: "primary", leftIcon: "LeftIcon", children: "With Left Icon" },
+        { size: "md", variant: "primary", rightIcon: "RightIcon", children: "With Right Icon" },
+      ],
+    },
+    {
+      heading: "Secondary",
+      wrapperClass: "flex flex-wrap items-center gap-3",
+      importPath: "@/components/ui",
+      buttons: [
+        { size: "sm", variant: "secondary", children: "Small" },
+        { size: "md", variant: "secondary", children: "Medium" },
+        { size: "lg", variant: "secondary", children: "Large" },
+        { size: "md", variant: "secondary", disabled: true, children: "Disabled" },
+        { size: "md", variant: "secondary", loading: true, children: "Loading" },
+        { size: "md", variant: "secondary", leftIcon: "LeftIcon", children: "With Left Icon" },
+        { size: "md", variant: "secondary", rightIcon: "RightIcon", children: "With Right Icon" },
+      ],
+    },
+    {
+      heading: "Outline",
+      wrapperClass: "flex flex-wrap items-center gap-3",
+      importPath: "@/components/ui",
+      buttons: [
+        { size: "sm", variant: "outline", children: "Small" },
+        { size: "md", variant: "outline", children: "Medium" },
+        { size: "lg", variant: "outline", children: "Large" },
+        { size: "md", variant: "outline", disabled: true, children: "Disabled" },
+        { size: "md", variant: "outline", loading: true, children: "Loading" },
+        { size: "md", variant: "outline", leftIcon: "LeftIcon", children: "With Left Icon" },
+        { size: "md", variant: "outline", rightIcon: "RightIcon", children: "With Right Icon" },
+      ],
+    },
+    {
+      heading: "Full Width",
+      wrapperClass: "space-y-3",
+      importPath: "@/components/ui",
+      buttons: [
+        { size: "md", variant: "primary", fullWidth: true, children: "Primary full width" },
+        { size: "md", variant: "secondary", fullWidth: true, children: "Secondary full width" },
+        { size: "md", variant: "outline", fullWidth: true, children: "Outline full width" },
+      ],
+    },
+  ];
 
-const LeftIcon = (
+  // Helper to render a Button from config (for the live preview)
+  const renderBtn = (cfg, idx) => (
+    <Button
+      key={idx}
+      size={cfg.size}
+      variant={cfg.variant}
+      disabled={!!cfg.disabled}
+      loading={!!cfg.loading}
+      fullWidth={!!cfg.fullWidth}
+      leftIcon={cfg.leftIcon ? LeftIcon : undefined}
+      rightIcon={cfg.rightIcon ? RightIcon : undefined}
+    >
+      {cfg.children}
+    </Button>
+  );
+
+  // Convert group config into a JSX snippet string that mirrors the rendered preview exactly.
+  const buildJsxSnippet = (group) => {
+    const importLine = `import { Button } from "${group.importPath}";`;
+
+    const iconBlock =
+`const LeftIcon = (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
     <path d="M12 2a10 10 0 1 0 .001 20.001A10 10 0 0 0 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z" />
   </svg>
@@ -33,96 +114,54 @@ const RightIcon = (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
     <path d="M12 4l1.41 1.41L8.83 10H20v2H8.83l4.58 4.59L12 18l-8-8 8-8z" />
   </svg>
-);
+);`;
 
-export function Example() {
-  return (
-    <div className="flex flex-wrap items-center gap-3">
-      <Button size="sm" variant="primary">Small</Button>
-      <Button size="md" variant="primary">Medium</Button>
-      <Button size="lg" variant="primary">Large</Button>
-      <Button size="md" variant="primary" disabled>Disabled</Button>
-      <Button size="md" variant="primary" loading>Loading</Button>
-      <Button size="md" variant="primary" leftIcon={LeftIcon}>With Left Icon</Button>
-      <Button size="md" variant="primary" rightIcon={RightIcon}>With Right Icon</Button>
-    </div>
-  );
-}
-`.trim();
+    // Build each <Button ...>Text</Button> line ensuring prop ordering and values match render
+    const btnToLine = (b) => {
+      const props = [];
+      // Maintain consistent prop order: size, variant, disabled, loading, fullWidth, leftIcon, rightIcon
+      if (b.size) props.push(`size="${b.size}"`);
+      if (b.variant) props.push(`variant="${b.variant}"`);
+      if (b.disabled) props.push("disabled");
+      if (b.loading) props.push("loading");
+      if (b.fullWidth) props.push("fullWidth");
+      if (b.leftIcon) props.push("leftIcon={LeftIcon}");
+      if (b.rightIcon) props.push("rightIcon={RightIcon}");
+      const propsStr = props.length ? " " + props.join(" ") : "";
+      return `      <Button${propsStr}>${b.children}</Button>`;
+    };
 
-  const secondaryCode = `
-import { Button } from "@/components/ui";
+    const needsIcons = group.buttons.some((b) => b.leftIcon || b.rightIcon);
 
-const LeftIcon = (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 2a10 10 0 1 0 .001 20.001A10 10 0 0 0 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z" />
-  </svg>
-);
+    const lines = [
+      importLine,
+      "",
+      ...(needsIcons ? [iconBlock, ""] : []),
+      "export function Example() {",
+      "  return (",
+      `    <div className="${group.wrapperClass}">`,
+      ...group.buttons.map(btnToLine),
+      "    </div>",
+      "  );",
+      "}",
+    ];
 
-const RightIcon = (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 4l1.41 1.41L8.83 10H20v2H8.83l4.58 4.59L12 18l-8-8 8-8z" />
-  </svg>
-);
+    return lines.join("\n").trim();
+  };
 
-export function Example() {
-  return (
-    <div className="flex flex-wrap items-center gap-3">
-      <Button size="sm" variant="secondary">Small</Button>
-      <Button size="md" variant="secondary">Medium</Button>
-      <Button size="lg" variant="secondary">Large</Button>
-      <Button size="md" variant="secondary" disabled>Disabled</Button>
-      <Button size="md" variant="secondary" loading>Loading</Button>
-      <Button size="md" variant="secondary" leftIcon={LeftIcon}>With Left Icon</Button>
-      <Button size="md" variant="secondary" rightIcon={RightIcon}>With Right Icon</Button>
-    </div>
-  );
-}
-`.trim();
-
-  const outlineCode = `
-import { Button } from "@/components/ui";
-
-const LeftIcon = (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 2a10 10 0 1 0 .001 20.001A10 10 0 0 0 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z" />
-  </svg>
-);
-
-const RightIcon = (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 4l1.41 1.41L8.83 10H20v2H8.83l4.58 4.59L12 18l-8-8 8-8z" />
-  </svg>
-);
-
-export function Example() {
-  return (
-    <div className="flex flex-wrap items-center gap-3">
-      <Button size="sm" variant="outline">Small</Button>
-      <Button size="md" variant="outline">Medium</Button>
-      <Button size="lg" variant="outline">Large</Button>
-      <Button size="md" variant="outline" disabled>Disabled</Button>
-      <Button size="md" variant="outline" loading>Loading</Button>
-      <Button size="md" variant="outline" leftIcon={LeftIcon}>With Left Icon</Button>
-      <Button size="md" variant="outline" rightIcon={RightIcon}>With Right Icon</Button>
-    </div>
-  );
-}
-`.trim();
-
-  const fullWidthCode = `
-import { Button } from "@/components/ui";
-
-export function Example() {
-  return (
-    <div className="space-y-3">
-      <Button size="md" variant="primary" fullWidth>Primary full width</Button>
-      <Button size="md" variant="secondary" fullWidth>Secondary full width</Button>
-      <Button size="md" variant="outline" fullWidth>Outline full width</Button>
-    </div>
-  );
-}
-`.trim();
+  // Build memoized previews and their code from the same config
+  const sections = useMemo(() => {
+    return exampleGroups.map((g) => {
+      const preview = (
+        <div className={g.wrapperClass}>
+          {g.buttons.map((b, i) => renderBtn(b, i))}
+        </div>
+      );
+      const code = buildJsxSnippet(g);
+      return { heading: g.heading, preview, code };
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // all configs are static
 
   // local copy helper (mirrors PreviewCard copy)
   const useCopy = () => {
@@ -214,57 +253,12 @@ export function Example() {
     );
   };
 
-  // Memoize previews so icons aren't recreated unnecessarily in children
-  const PrimaryPreview = useMemo(() => (
-    <div className="flex flex-wrap items-center gap-3">
-      <Button size="sm" variant="primary">Small</Button>
-      <Button size="md" variant="primary">Medium</Button>
-      <Button size="lg" variant="primary">Large</Button>
-      <Button size="md" variant="primary" disabled>Disabled</Button>
-      <Button size="md" variant="primary" loading>Loading</Button>
-      <Button size="md" variant="primary" leftIcon={LeftIcon}>With Left Icon</Button>
-      <Button size="md" variant="primary" rightIcon={RightIcon}>With Right Icon</Button>
-    </div>
-  ), []); // icons are static
-
-  const SecondaryPreview = useMemo(() => (
-    <div className="flex flex-wrap items-center gap-3">
-      <Button size="sm" variant="secondary">Small</Button>
-      <Button size="md" variant="secondary">Medium</Button>
-      <Button size="lg" variant="secondary">Large</Button>
-      <Button size="md" variant="secondary" disabled>Disabled</Button>
-      <Button size="md" variant="secondary" loading>Loading</Button>
-      <Button size="md" variant="secondary" leftIcon={LeftIcon}>With Left Icon</Button>
-      <Button size="md" variant="secondary" rightIcon={RightIcon}>With Right Icon</Button>
-    </div>
-  ), []);
-
-  const OutlinePreview = useMemo(() => (
-    <div className="flex flex-wrap items-center gap-3">
-      <Button size="sm" variant="outline">Small</Button>
-      <Button size="md" variant="outline">Medium</Button>
-      <Button size="lg" variant="outline">Large</Button>
-      <Button size="md" variant="outline" disabled>Disabled</Button>
-      <Button size="md" variant="outline" loading>Loading</Button>
-      <Button size="md" variant="outline" leftIcon={LeftIcon}>With Left Icon</Button>
-      <Button size="md" variant="outline" rightIcon={RightIcon}>With Right Icon</Button>
-    </div>
-  ), []);
-
-  const FullWidthPreview = useMemo(() => (
-    <div className="space-y-3">
-      <Button size="md" variant="primary" fullWidth>Primary full width</Button>
-      <Button size="md" variant="secondary" fullWidth>Secondary full width</Button>
-      <Button size="md" variant="outline" fullWidth>Outline full width</Button>
-    </div>
-  ), []);
-
+  // Render all sections based on single source of truth
   return (
     <div className="space-y-8">
-      <SnippetSection heading="Primary"   preview={PrimaryPreview}   code={primaryCode} />
-      <SnippetSection heading="Secondary" preview={SecondaryPreview} code={secondaryCode} />
-      <SnippetSection heading="Outline"   preview={OutlinePreview}   code={outlineCode} />
-      <SnippetSection heading="Full Width" preview={FullWidthPreview} code={fullWidthCode} />
+      {sections.map((s) => (
+        <SnippetSection key={s.heading} heading={s.heading} preview={s.preview} code={s.code} />
+      ))}
     </div>
   );
 }
