@@ -10,7 +10,9 @@ import CodeViewer from "./CodeViewer";
 // PUBLIC_INTERFACE
 export function ensureSectionWrappedHtml(input = "") {
   const html = (input || "").trim();
-  const isHtml = /\<\s*(section|div|button|ul|li|span|header|footer|a|p|h[1-6])\b/i.test(html) || /class="/.test(html);
+  const isHtml =
+    /\<\s*(section|div|button|ul|li|span|header|footer|a|p|h[1-6])\b/i.test(html) ||
+    /class="/.test(html);
   const normalized = isHtml ? html : jsxToStaticHtml(html);
 
   // If already a single <section> root, keep as-is (but ensure class attributes)
@@ -33,7 +35,10 @@ function jsxToStaticHtml(src = "") {
   let out = String(src);
 
   // Remove function/component wrappers with return(...)
-  out = out.replace(/export\s+(default\s+)?function\s+[A-Za-z0-9_]+\s*\([^)]*\)\s*\{\s*[\s\S]*?return\s*\(\s*/m, "");
+  out = out.replace(
+    /export\s+(default\s+)?function\s+[A-Za-z0-9_]+\s*\([^)]*\)\s*\{\s*[\s\S]*?return\s*\(\s*/m,
+    ""
+  );
   out = out.replace(/\)\s*;?\s*\}\s*$/m, "");
 
   // className -> class
@@ -52,7 +57,10 @@ function jsxToStaticHtml(src = "") {
   out = out.replace(/\{\s*["'`](.*?)["'`]\s*\}/g, "$1");
 
   // Naively unwrap map(() => ( ... ))
-  out = out.replace(/\{\s*[^}]*?\.map\([^)]*?=>\s*\(\s*([\s\S]*?)\s*\)\s*\)\s*\}/gm, "$1");
+  out = out.replace(
+    /\{\s*[^}]*?\.map\([^)]*?=>\s*\(\s*([\s\S]*?)\s*\)\s*\)\s*\}/gm,
+    "$1"
+  );
 
   return out.trim();
 }
@@ -65,12 +73,13 @@ ${innerHtml}
 </section>`;
 }
 
-// PUBLIC_INTERFACE
+/**
+ * PUBLIC_INTERFACE
+ * PreviewCard
+ * Card that shows a Preview tab by default and a Code tab which displays the exact Tailwind Play–ready HTML snippet.
+ * Copy button copies the same exact snippet (no JSX conversion in display other than the normalization above).
+ */
 export default function PreviewCard({ title, description, preview, code }) {
-  /**
-   * Card that shows Preview by default and a Code tab which displays the exact Tailwind Play–ready HTML snippet.
-   * Copy button copies the same exact snippet (no JSX conversion in display).
-   */
   const [activeTab, setActiveTab] = useState("preview");
   const [copied, setCopied] = useState(false);
 
@@ -101,21 +110,105 @@ export default function PreviewCard({ title, description, preview, code }) {
     }
   };
 
-  const CopyButton = (
-    <button
-      type="button"
-      onClick={handleCopy}
-      className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-gray-200 bg-white/90 text-gray-700 hover:bg-white hover:shadow-sm transition ${copied ? "ring-2 ring-blue-500/30" : ""}`}
-      aria-label="Copy Tailwind Play HTML snippet to clipboard"
-      title="Copy Tailwind Play snippet"
-    >
-    …
-    </button>
-  );
-
   return (
     <div className="bg-white rounded-2xl shadow-soft border border-gray-100 overflow-hidden transition hover:shadow-lg">
-      …
+      {/* Header */}
+      <div className="px-5 py-4 border-b border-gray-100 bg-gray-50/60 flex items-center justify-between">
+        <div>
+          {title ? (
+            <h3 className="text-base font-semibold text-gray-900">{title}</h3>
+          ) : (
+            <h3 className="text-base font-semibold text-gray-900">Preview</h3>
+          )}
+          {description ? (
+            <p className="text-sm text-gray-600 mt-1">{description}</p>
+          ) : null}
+        </div>
+        {/* Tabs */}
+        <div className="inline-flex rounded-lg border border-gray-200 bg-white p-0.5">
+          <button
+            type="button"
+            onClick={() => setActiveTab("preview")}
+            className={`px-3 py-1.5 text-sm rounded-md transition ${
+              activeTab === "preview"
+                ? "bg-blue-50 text-ocean-primary"
+                : "text-gray-700 hover:text-ocean-primary"
+            }`}
+            aria-pressed={activeTab === "preview"}
+          >
+            Preview
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("code")}
+            className={`px-3 py-1.5 text-sm rounded-md transition ${
+              activeTab === "code"
+                ? "bg-blue-50 text-ocean-primary"
+                : "text-gray-700 hover:text-ocean-primary"
+            }`}
+            aria-pressed={activeTab === "code"}
+          >
+            Code
+          </button>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="p-5">
+        {activeTab === "preview" && (
+          <div className="rounded-xl border border-gray-100 p-6 bg-gradient-to-br from-blue-500/10 to-gray-50">
+            {/* The preview expects a <section> inside for consistency */}
+            {preview || (
+              <section>
+                <div className="rounded-2xl border border-dashed border-gray-300 p-6 bg-white">
+                  <h4 className="font-semibold text-gray-900">Preview unavailable</h4>
+                  <p className="text-sm text-gray-600 mt-1">
+                    This item does not have a live preview.
+                  </p>
+                </div>
+              </section>
+            )}
+          </div>
+        )}
+
+        {activeTab === "code" && (
+          <div>
+            {/* Toolbar with copy */}
+            <div className="mb-3 flex items-center justify-between">
+              <div className="text-xs text-gray-600">
+                Tailwind Play–ready snippet (single &lt;section&gt; root)
+              </div>
+              <button
+                type="button"
+                onClick={handleCopy}
+                className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-gray-200 bg-white/90 text-gray-700 hover:bg-white hover:shadow-sm transition ${
+                  copied ? "ring-2 ring-blue-500/30" : ""
+                }`}
+                aria-label="Copy Tailwind Play HTML snippet to clipboard"
+                title="Copy Tailwind Play snippet"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  className={copied ? "text-green-600" : "text-ocean-primary"}
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  {copied ? (
+                    <path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z" />
+                  ) : (
+                    <path d="M8 7a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V7zm-3 3h1v7a3 3 0 0 0 3 3h8v1a2 2 0 0 1-2 2H6a4 4 0 0 1-4-4v-7a2 2 0 0 1 2-2z" />
+                  )}
+                </svg>
+                <span className="text-sm font-medium">{copied ? "Copied" : "Copy"}</span>
+              </button>
+            </div>
+
+            <CodeViewer code={htmlSnippet} language="html" initiallyOpen />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

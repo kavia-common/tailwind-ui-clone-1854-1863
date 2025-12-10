@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Prism from "prismjs";
 import "prismjs/components/prism-jsx";
+import "prismjs/components/prism-markup"; // html
 import "prismjs/themes/prism.css";
 
 // PUBLIC_INTERFACE
