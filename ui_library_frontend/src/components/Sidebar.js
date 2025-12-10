@@ -1,9 +1,37 @@
 import React, { useState } from "react";
 
+/**
+ * Sidebar supports two data shapes:
+ * - Flat categories: [{ key, label }]
+ * - Grouped categories with items: [{ key, label, items: [{ label, slug }] }]
+ * If items are provided, it renders group headers and nested anchor buttons.
+ */
+
 // PUBLIC_INTERFACE
 export default function Sidebar({ title = "Categories", categories = [], onSelect }) {
   /** Collapsible left sidebar with categories list */
   const [open, setOpen] = useState(true);
+
+  const isGrouped = Array.isArray(categories) && categories.some((c) => Array.isArray(c.items));
+
+  const handleClick = (group, item) => {
+    // If onSelect provided, forward data up (useful for pages)
+    if (onSelect) {
+      onSelect(item ? { ...item, group } : group);
+    }
+    // Navigate to hash anchor if available
+    if (item?.slug && group?.key) {
+      const id = `${group.key}__${item.slug}`;
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        // Update hash to be shareable
+        if (typeof window !== "undefined") {
+          window.history.replaceState(null, "", `#${id}`);
+        }
+      }
+    }
+  };
 
   return (
     <aside className="relative">
@@ -22,20 +50,51 @@ export default function Sidebar({ title = "Categories", categories = [], onSelec
           open ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         }`}
       >
-        <div className="p-4">
+        <div className="p-4 h-full overflow-y-auto">
           <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">{title}</div>
-          <ul className="space-y-1">
-            {categories.map((c) => (
-              <li key={c.key}>
-                <button
-                  onClick={() => onSelect && onSelect(c)}
-                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-ocean-primary transition text-sm text-gray-700"
-                >
-                  {c.label}
-                </button>
-              </li>
-            ))}
-          </ul>
+
+          {!isGrouped && (
+            <ul className="space-y-1">
+              {categories.map((c) => (
+                <li key={c.key}>
+                  <button
+                    onClick={() => handleClick(c)}
+                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-ocean-primary transition text-sm text-gray-700"
+                  >
+                    {c.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {isGrouped && (
+            <div className="space-y-5">
+              {categories.map((group) => (
+                <div key={group.key}>
+                  <div className="px-3 py-2 text-[13px] font-semibold text-gray-900 bg-gray-50 border border-gray-200 rounded-lg">
+                    {group.label}
+                  </div>
+                  <ul className="mt-2 space-y-1">
+                    {(group.items || []).map((item) => (
+                      <li key={`${group.key}-${item.slug}`}>
+                        <button
+                          onClick={() => handleClick(group, item)}
+                          className="w-full text-left px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-ocean-primary transition text-sm text-gray-700"
+                          title={item.label}
+                        >
+                          <span className="inline-flex items-center gap-2">
+                            <span className="h-1.5 w-1.5 rounded-full bg-blue-200" />
+                            {item.label}
+                          </span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </aside>
