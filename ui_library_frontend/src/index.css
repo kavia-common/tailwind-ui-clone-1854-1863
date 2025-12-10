@@ -30,9 +30,17 @@ a {
 }
 
 .code-scrollbar::-webkit-scrollbar {
+  width: 8px;
   height: 8px;
 }
 .code-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(17,24,39,0.2);
+  background: rgba(17,24,39,0.25);
   border-radius: 8px;
+}
+.code-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.code-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(17,24,39,0.25) transparent;
 }
