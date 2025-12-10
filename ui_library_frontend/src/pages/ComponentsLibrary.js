@@ -50,6 +50,9 @@ export default function ComponentsLibrary() {
   // Resolve registry entry for current selection
   const current = getCatalogItemBySlug(selectedSlug);
 
+  const isTable = current?.slug?.startsWith("table-");
+  const codeSnippet = current?.htmlSnippet || "";
+
   return (
     <main className="relative">
       <div className="mx-auto max-w-7xl">
@@ -77,6 +80,8 @@ export default function ComponentsLibrary() {
                   description="Live preview and code"
                   preview={current.preview || null}
                   language="markup"
+                  codeSnippet={!isTable ? codeSnippet : undefined}
+                  disableCode={!!isTable}
                 />
               )}
 
