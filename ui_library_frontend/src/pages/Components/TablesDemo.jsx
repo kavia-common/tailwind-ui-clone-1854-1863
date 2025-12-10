@@ -583,6 +583,9 @@ function SectionCard({ title, data }) {
   );
 }
 
+/**
+ * The default export renders all sections (used for the full demo page).
+ */
 // PUBLIC_INTERFACE
 export default function TablesDemo() {
   const basic = BasicTableSection();
@@ -595,6 +598,53 @@ export default function TablesDemo() {
       <SectionCard title={basic.title} data={basic} />
       <SectionCard title={sortable.title} data={sortable} />
       <SectionCard title={filtering.title} data={filtering} />
+      <SectionCard title={paginatedSelectable.title} data={paginatedSelectable} />
+    </div>
+  );
+}
+
+/**
+ * PUBLIC_INTERFACE
+ * Wrapper components for single-section rendering per catalog slug.
+ * Each wrapper mounts only its corresponding section and ensures the Code tab/snippet
+ * shows exactly that section (via SectionCard using the section's code field).
+ */
+
+// PUBLIC_INTERFACE
+export function TablesBasicOnly() {
+  const basic = BasicTableSection();
+  return (
+    <div className="space-y-10">
+      <SectionCard title={basic.title} data={basic} />
+    </div>
+  );
+}
+
+// PUBLIC_INTERFACE
+export function TablesSortableOnly() {
+  const sortable = SortableTableSection();
+  return (
+    <div className="space-y-10">
+      <SectionCard title={sortable.title} data={sortable} />
+    </div>
+  );
+}
+
+// PUBLIC_INTERFACE
+export function TablesFilterOnly() {
+  const filtering = FilteringTableSection();
+  return (
+    <div className="space-y-10">
+      <SectionCard title={filtering.title} data={filtering} />
+    </div>
+  );
+}
+
+// PUBLIC_INTERFACE
+export function TablesPaginatedSelectableOnly() {
+  const paginatedSelectable = PaginatedSelectableTableSection();
+  return (
+    <div className="space-y-10">
       <SectionCard title={paginatedSelectable.title} data={paginatedSelectable} />
     </div>
   );

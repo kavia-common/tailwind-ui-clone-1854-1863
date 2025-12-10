@@ -1,7 +1,12 @@
 import React from "react";
 import { OceanButton, OceanCard } from "./samples";
 import ButtonsDemo from "../pages/Components/ButtonsDemo";
-import TablesDemo from "../pages/Components/TablesDemo";
+import TablesDemo, {
+  TablesBasicOnly,
+  TablesSortableOnly,
+  TablesFilterOnly,
+  TablesPaginatedSelectableOnly,
+} from "../pages/Components/TablesDemo";
 
 /**
  * This file defines:
@@ -466,43 +471,27 @@ const PTooltip = () => (
   </div>
 );
 
-// Tables previews
+/**
+ * Tables previews (single-section wrappers)
+ */
 const PTableBasic = () => (
-  <div className="rounded-xl border border-gray-200 overflow-hidden bg-white">
-    <table className="w-full text-left text-sm">
-      <thead className="bg-gray-50">
-        <tr>
-          <th className="px-4 py-2 text-gray-700">Name</th>
-          <th className="px-4 py-2 text-gray-700">Role</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr className="border-t border-gray-100">
-          <td className="px-4 py-2">Jane</td>
-          <td className="px-4 py-2">Engineer</td>
-        </tr>
-        <tr className="border-t border-gray-100">
-          <td className="px-4 py-2">Mark</td>
-          <td className="px-4 py-2">Designer</td>
-        </tr>
-      </tbody>
-    </table>
+  <div className="space-y-8">
+    <TablesBasicOnly />
   </div>
 );
 const PTableSortable = () => (
   <div className="space-y-8">
-    {/* Mount only the Sortable section from TablesDemo by rendering the component and hiding others via keys */}
-    <TablesDemo key="tables-demo-sortable" />
+    <TablesSortableOnly />
   </div>
 );
 const PTableFiltering = () => (
   <div className="space-y-8">
-    <TablesDemo key="tables-demo-filtering" />
+    <TablesFilterOnly />
   </div>
 );
 const PTableEditable = () => (
   <div className="space-y-8">
-    <TablesDemo key="tables-demo-paginated" />
+    <TablesPaginatedSelectableOnly />
   </div>
 );
 
@@ -1362,28 +1351,11 @@ const previewComponents = {
   "popover": <PPopover />,
   "tooltip": <PTooltip />,
 
-  // Tables
-  "table-basic": (
-    <div className="space-y-8">
-      {/* Render only the Basic section from TablesDemo */}
-      <div data-table-section="basic"><TablesDemo /></div>
-    </div>
-  ),
-  "table-sortable": (
-    <div className="space-y-8">
-      <div data-table-section="sortable"><TablesDemo /></div>
-    </div>
-  ),
-  "table-filtering": (
-    <div className="space-y-8">
-      <div data-table-section="filtering"><TablesDemo /></div>
-    </div>
-  ),
-  "table-paginated-selectable": (
-    <div className="space-y-8">
-      <div data-table-section="paginated-selectable"><TablesDemo /></div>
-    </div>
-  ),
+  // Tables (map to single-section wrappers)
+  "table-basic": <PTableBasic />,
+  "table-sortable": <PTableSortable />,
+  "table-filtering": <PTableFiltering />,
+  "table-paginated-selectable": <PTableEditable />,
 
   // Backward compat
   "buttons-primary": <OceanButton>Button</OceanButton>,
