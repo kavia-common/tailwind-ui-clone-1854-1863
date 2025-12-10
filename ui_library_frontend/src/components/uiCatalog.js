@@ -1,6 +1,7 @@
 import React from "react";
 import { OceanButton, OceanCard } from "./samples";
 import ButtonsDemo from "../pages/Components/ButtonsDemo";
+import TablesDemo from "../pages/Components/TablesDemo";
 
 /**
  * This file defines:
@@ -488,9 +489,22 @@ const PTableBasic = () => (
     </table>
   </div>
 );
-const PTableSortable = () => <PTableBasic />;
-const PTableFiltering = () => <PTableBasic />;
-const PTableEditable = () => <PTableBasic />;
+const PTableSortable = () => (
+  <div className="space-y-8">
+    {/* Mount only the Sortable section from TablesDemo by rendering the component and hiding others via keys */}
+    <TablesDemo key="tables-demo-sortable" />
+  </div>
+);
+const PTableFiltering = () => (
+  <div className="space-y-8">
+    <TablesDemo key="tables-demo-filtering" />
+  </div>
+);
+const PTableEditable = () => (
+  <div className="space-y-8">
+    <TablesDemo key="tables-demo-paginated" />
+  </div>
+);
 
 /**
  * Internal catalog definition with Tailwind Play–ready snippets
@@ -1222,22 +1236,41 @@ const catalog = [
     </div>
   </div>
       `) },
-      { slug: "table-editable", title: "Editable Table", htmlSnippet: shell(`
-  <div class="rounded-xl border border-gray-200 overflow-hidden bg-white">
-    <table class="w-full text-left text-sm">
-      <thead class="bg-gray-50">
-        <tr>
-          <th class="px-4 py-2 text-gray-700">Name</th>
-          <th class="px-4 py-2 text-gray-700">Role</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="border-t border-gray-100">
-          <td class="px-4 py-2"><input value="Jane" class="px-2 py-1 rounded border border-gray-300" /></td>
-          <td class="px-4 py-2"><input value="Engineer" class="px-2 py-1 rounded border border-gray-300" /></td>
-        </tr>
-      </tbody>
-    </table>
+      { slug: "table-paginated-selectable", title: "Paginated + Selectable Table", htmlSnippet: shell(`
+  <div class="space-y-3">
+    <div class="inline-flex items-center gap-2">
+      <span class="text-sm text-gray-700">Rows per page:</span>
+      <select class="px-2 py-1 rounded-lg border border-gray-300 bg-white text-sm">
+        <option>3</option><option>5</option><option>10</option>
+      </select>
+    </div>
+    <div class="rounded-xl border border-gray-200 overflow-hidden bg-white">
+      <div class="flex items-center justify-between px-4 py-2 bg-gray-50 border-b border-gray-200">
+        <div class="text-sm text-gray-700">
+          Selected:
+          <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-[#2563EB] border border-blue-200">0</span>
+        </div>
+        <div class="text-xs text-gray-500">Showing 1-3 of 6</div>
+      </div>
+      <table class="w-full text-left text-sm">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-4 py-2 text-gray-700 w-10"><input type="checkbox" class="h-4 w-4 rounded border-gray-300 text-blue-600" /></th>
+            <th class="px-4 py-2 text-gray-700">Name</th>
+            <th class="px-4 py-2 text-gray-700">Email</th>
+            <th class="px-4 py-2 text-gray-700">Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-t border-gray-100">
+            <td class="px-4 py-2"><input type="checkbox" class="h-4 w-4 rounded border-gray-300 text-blue-600" /></td>
+            <td class="px-4 py-2">Jane Cooper</td>
+            <td class="px-4 py-2">jane.cooper@example.com</td>
+            <td class="px-4 py-2">Engineer</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
       `) },
     ],
@@ -1330,10 +1363,27 @@ const previewComponents = {
   "tooltip": <PTooltip />,
 
   // Tables
-  "table-basic": <PTableBasic />,
-  "table-sortable": <PTableSortable />,
-  "table-filtering": <PTableFiltering />,
-  "table-editable": <PTableEditable />,
+  "table-basic": (
+    <div className="space-y-8">
+      {/* Render only the Basic section from TablesDemo */}
+      <div data-table-section="basic"><TablesDemo /></div>
+    </div>
+  ),
+  "table-sortable": (
+    <div className="space-y-8">
+      <div data-table-section="sortable"><TablesDemo /></div>
+    </div>
+  ),
+  "table-filtering": (
+    <div className="space-y-8">
+      <div data-table-section="filtering"><TablesDemo /></div>
+    </div>
+  ),
+  "table-paginated-selectable": (
+    <div className="space-y-8">
+      <div data-table-section="paginated-selectable"><TablesDemo /></div>
+    </div>
+  ),
 
   // Backward compat
   "buttons-primary": <OceanButton>Button</OceanButton>,
