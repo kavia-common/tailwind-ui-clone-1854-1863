@@ -80,8 +80,7 @@ export default function ComponentsLibrary() {
                   description="Live preview and code"
                   preview={current.preview || null}
                   language="markup"
-                  codeSnippet={!isTable ? codeSnippet : undefined}
-                  disableCode={!!isTable}
+                  codeSnippet={codeSnippet}
                 />
               )}
 

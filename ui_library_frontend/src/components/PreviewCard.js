@@ -14,7 +14,6 @@ export default function PreviewCard({
   preview,
   language = "markup",
   codeSnippet,
-  disableCode = false,
 }) {
   const [activeTab, setActiveTab] = useState("preview");
 
@@ -61,7 +60,7 @@ export default function PreviewCard({
     ].join("\n");
   }, [codeSnippet, preview]);
 
-  const showTabs = !disableCode;
+  const showTabs = true;
 
   return (
     <div className="bg-white rounded-2xl shadow-soft border border-gray-100 overflow-hidden transition hover:shadow-lg">
