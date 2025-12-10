@@ -52,7 +52,7 @@ export default function Sidebar({ title = "Categories", categories = [], onSelec
       {/* Mobile toggle button */}
       <button
         onClick={() => setOpen(!open)}
-        className="md:hidden m-2 px-3 py-2 rounded-md bg-white text-gray-700 shadow hover:shadow-md border border-gray-200 transition"
+        className="md:hidden m-2 px-3 py-2 rounded-md bg-gradient-app text-white shadow hover:shadow-md border border-white/20 transition"
         aria-expanded={open}
         aria-controls="left-sidebar"
       >
@@ -62,7 +62,7 @@ export default function Sidebar({ title = "Categories", categories = [], onSelec
       {/* Container handles position and width for both mobile and desktop */}
       <div
         id="left-sidebar"
-        className={`w-72 bg-white border-r border-gray-200 z-30 transition-transform ease-gentle
+        className={`w-72 bg-gradient-app text-white z-30 transition-transform ease-gentle
         md:translate-x-0
         md:sticky md:top-16
         md:h-[calc(100vh-4rem)]
@@ -72,7 +72,7 @@ export default function Sidebar({ title = "Categories", categories = [], onSelec
       >
         {/* Scroll area with custom scrollbar style */}
         <div className="p-4 h-full overflow-y-auto code-scrollbar">
-          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">{title}</div>
+          <div className="text-xs font-semibold text-white/80 uppercase tracking-wider mb-3">{title}</div>
 
           {!isGrouped && (
             <ul className="space-y-1">
@@ -80,7 +80,7 @@ export default function Sidebar({ title = "Categories", categories = [], onSelec
                 <li key={c.key}>
                   <button
                     onClick={() => handleClick(c)}
-                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-ocean-primary transition text-sm text-gray-700"
+                    className="w-full text-left px-3 py-2 rounded-lg transition text-sm text-white/90 hover:text-white hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
                   >
                     {c.label}
                   </button>
@@ -93,7 +93,7 @@ export default function Sidebar({ title = "Categories", categories = [], onSelec
             <div className="space-y-5">
               {categories.map((group) => (
                 <div key={group.key}>
-                  <div className="px-3 py-2 text-[13px] font-semibold text-gray-900 bg-gray-50 border border-gray-200 rounded-lg">
+                  <div className="px-3 py-2 text-[13px] font-semibold text-white/95 bg-white/10 border border-white/20 rounded-lg">
                     {group.label}
                   </div>
                   <ul className="mt-2 space-y-1">
@@ -101,11 +101,11 @@ export default function Sidebar({ title = "Categories", categories = [], onSelec
                       <li key={`${group.key}-${item.slug}`}>
                         <button
                           onClick={() => handleClick(group, item)}
-                          className="w-full text-left px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-ocean-primary transition text-sm text-gray-700"
+                          className="w-full text-left px-3 py-2 rounded-lg transition text-sm text-white/90 hover:text-white hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
                           title={item.label}
                         >
                           <span className="inline-flex items-center gap-2">
-                            <span className="h-1.5 w-1.5 rounded-full bg-blue-200" />
+                            <span className="h-1.5 w-1.5 rounded-full bg-white/50" />
                             {item.label}
                           </span>
                         </button>

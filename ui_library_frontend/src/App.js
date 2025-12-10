@@ -9,19 +9,19 @@ import BlocksLibrary from "./pages/BlocksLibrary";
 function Navbar() {
   /** Top navigation bar with active route highlighting */
   return (
-    <nav className="fixed top-0 left-0 right-0 z-40 bg-white/80 backdrop-blur border-b border-gray-200">
+    <nav className="fixed top-0 left-0 right-0 z-40 bg-gradient-app text-white shadow">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-600 to-amber-400 shadow-soft"></div>
-          <div className="font-semibold text-gray-900">Ocean UI Library</div>
+          <div className="h-8 w-8 rounded-lg bg-white/20 shadow-soft"></div>
+          <div className="font-semibold text-white">Ocean UI Library</div>
         </div>
         <div className="flex items-center gap-6">
           <NavLink
             to="/"
             end
             className={({ isActive }) =>
-              `text-sm font-medium transition px-2 py-1 rounded-md ${
-                isActive ? "text-ocean-primary bg-blue-50" : "text-gray-700 hover:text-ocean-primary"
+              `text-sm font-medium transition px-2 py-1 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 ${
+                isActive ? "text-white bg-white/10" : "text-white/90 hover:text-white"
               }`
             }
           >
@@ -30,8 +30,8 @@ function Navbar() {
           <NavLink
             to="/components"
             className={({ isActive }) =>
-              `text-sm font-medium transition px-2 py-1 rounded-md ${
-                isActive ? "text-ocean-primary bg-blue-50" : "text-gray-700 hover:text-ocean-primary"
+              `text-sm font-medium transition px-2 py-1 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 ${
+                isActive ? "text-white bg-white/10" : "text-white/90 hover:text-white"
               }`
             }
           >
@@ -40,8 +40,8 @@ function Navbar() {
           <NavLink
             to="/blocks"
             className={({ isActive }) =>
-              `text-sm font-medium transition px-2 py-1 rounded-md ${
-                isActive ? "text-ocean-primary bg-blue-50" : "text-gray-700 hover:text-ocean-primary"
+              `text-sm font-medium transition px-2 py-1 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 ${
+                isActive ? "text-white bg-white/10" : "text-white/90 hover:text-white"
               }`
             }
           >
