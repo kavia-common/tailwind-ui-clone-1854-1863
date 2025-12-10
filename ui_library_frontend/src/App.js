@@ -4,6 +4,7 @@ import "./App.css";
 import Home from "./pages/Home";
 import ComponentsLibrary from "./pages/ComponentsLibrary";
 import BlocksLibrary from "./pages/BlocksLibrary";
+import Installation from "./pages/Installation";
 
 // PUBLIC_INTERFACE
 function Navbar() {
@@ -47,6 +48,16 @@ function Navbar() {
           >
             UI Blocks
           </NavLink>
+          <NavLink
+            to="/installation"
+            className={({ isActive }) =>
+              `text-sm font-medium transition px-2 py-1 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 ${
+                isActive ? "text-white bg-white/10" : "text-white/90 hover:text-white"
+              }`
+            }
+          >
+            Installation
+          </NavLink>
         </div>
       </div>
     </nav>
@@ -65,6 +76,7 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/components" element={<ComponentsLibrary />} />
             <Route path="/blocks" element={<BlocksLibrary />} />
+            <Route path="/installation" element={<Installation />} />
           </Routes>
         </div>
       </div>
