@@ -2,102 +2,85 @@ import React, { useMemo, useState } from "react";
 import CodeViewer from "./CodeViewer";
 
 /**
- * Build a Tailwind Play–ready snippet from provided html and optional assets.
- * Ensures preserved indentation and a minimal wrapper if not provided.
+ * Normalize code into a Tailwind Play–ready HTML snippet wrapped in a single <section>…</section>.
+ * - If input looks like JSX, convert className -> class and strip JSX constructs.
+ * - Enforce a single <section> root wrapper with Ocean gradient background.
+ * - No headers or comments: Play should accept the snippet as-is.
  */
 // PUBLIC_INTERFACE
-export function buildTailwindPlaySnippet({ html, extraCss = "", extraJs = "" }) {
-  const headerLines = [
-    "/* Tailwind Play: https://play.tailwindcss.com/ */",
-    extraCss.trim() ? "/* extra CSS included below */" : "",
-    extraJs.trim() ? "/* extra JS included below */" : "",
-  ].filter(Boolean);
-  const header = headerLines.join("\n");
+export function ensureSectionWrappedHtml(input = "") {
+  const html = (input || "").trim();
+  const isHtml = /<\s*(section|div|button|ul|li|span|header|footer|a|p|h[1-6])\b/i.test(html) || /class="/.test(html);
+  const normalized = isHtml ? html : jsxToStaticHtml(html);
 
-  const body = html && html.trim().length ? html.trim() : '<div class="p-4">Hello Tailwind</div>';
+  // If already a single <section> root, keep as-is (but ensure class attributes)
+  const trimmed = normalized.trim();
+  const hasSectionRoot = /^<\s*section\b[\s\S]*<\/\s*section\s*>$/i.test(trimmed);
 
-  const parts = [header, header ? "" : "", body];
-  if (extraCss.trim()) {
-    parts.push("", "/* --- extra CSS ---", extraCss.trim(), "--- end extra CSS --- */");
-  }
-  if (extraJs.trim()) {
-    parts.push("", "/* --- extra JS ---", extraJs.trim(), "--- end extra JS --- */");
-  }
-  return parts.filter((p, i, a) => !(p === "" && a[i - 1] === "")).join("\n");
+  const finalInner = hasSectionRoot ? trimmed : wrapInSection(trimmed);
+  return finalInner;
 }
 
 /**
- * Attempt to convert common JSX/TSX fragments into HTML-friendly Tailwind markup.
- * - Converts className -> class
- * - Removes export wrapper and outer return() if present
- * - Replaces <>...</> fragments with a minimal div wrapper
- * - Naively unwraps array .map(...) blocks keeping inner node example
- * - Strips {"text"} and {children}
+ * Convert a JSX-like fragment into static HTML (best-effort):
+ * - className -> class
+ * - remove JS expressions like {"text"}, {children}
+ * - unwrap simple array maps
+ * - replace fragments <>...</> with a div
+ * - expand self-closing non-void tags
  */
-// PUBLIC_INTERFACE
-export function jsxLikeToHtmlSnippet(input = "") {
-  if (!input) return "";
-  let out = String(input);
+function jsxToStaticHtml(src = "") {
+  let out = String(src);
 
-  // Remove export function wrapper before the return(
-  out = out.replace(/export\s+function\s+[A-Za-z0-9_]+\s*\([^)]*\)\s*\{\s*[\s\S]*?return\s*\(\s*/m, "");
-  // Remove the trailing )};
+  // Remove function/component wrappers with return(...)
+  out = out.replace(/export\s+(default\s+)?function\s+[A-Za-z0-9_]+\s*\([^)]*\)\s*\{\s*[\s\S]*?return\s*\(\s*/m, "");
   out = out.replace(/\)\s*;?\s*\}\s*$/m, "");
 
-  // Replace className with class
-  out = out.replace(/className=/g, "class=");
+  // className -> class
+  out = out.replace(/\bclassName=/g, "class=");
 
-  // Replace simple fragments with a wrapper
+  // Replace fragments
   out = out.replace(/<>/g, '<div class="p-4">').replace(/<\/>/g, "</div>");
 
-  // Expand self-closing elements into explicit closing for non-void tags
+  // Expand self-closing tags (non-void)
   out = out.replace(/<([a-zA-Z]+)([^>]*)\s\/>/g, "<$1$2></$1>");
 
-  // Strip {children}
+  // Remove {children}
   out = out.replace(/\{\s*children\s*\}/g, "");
-  // Replace {"text"} or {'text'} or {`text`} with text
+
+  // Replace {"text"} or {'text'} or {`text`}
   out = out.replace(/\{\s*["'`](.*?)["'`]\s*\}/g, "$1");
 
-  // Replace { array.map(() => ( ... )) } with inner content (naive)
+  // Naively unwrap map(() => ( ... ))
   out = out.replace(/\{\s*[^}]*?\.map\([^)]*?=>\s*\(\s*([\s\S]*?)\s*\)\s*\)\s*\}/gm, "$1");
 
-  const trimmed = out.trim();
+  return out.trim();
+}
 
-  // If it already starts with an element, return it
-  if (/^<([a-z-]+)(\s|>)/i.test(trimmed)) {
-    return trimmed;
-  }
-  // Otherwise wrap it to ensure it's valid in Play
-  return `<div class="p-4">\n${trimmed}\n</div>`;
+function wrapInSection(innerHtml) {
+  // Ocean Professional: gradient bg scaffold
+  const scaffoldClasses = "min-h-[100px] p-6 bg-gradient-to-br from-blue-500/10 to-gray-50";
+  return `<section class="${scaffoldClasses}">
+${innerHtml}
+</section>`;
 }
 
 // PUBLIC_INTERFACE
-export default function PreviewCard({ title, description, preview, code, language = "jsx" }) {
+export default function PreviewCard({ title, description, preview, code }) {
   /**
-   * Card component that displays a live preview and a toggleable code viewer.
-   * - Top-right segmented toggle between "Preview" and "Code"
-   * - Defaults to "Preview"
-   * - Code pane includes a copy-to-clipboard button
-   * - Copy button now copies a Tailwind Play–ready HTML snippet
+   * Card that shows Preview by default and a Code tab which displays the exact Tailwind Play–ready HTML snippet.
+   * Copy button copies the same exact snippet (no JSX conversion in display).
    */
   const [activeTab, setActiveTab] = useState("preview");
   const [copied, setCopied] = useState(false);
 
-  const playSnippet = useMemo(() => {
-    const raw = (code || "").trim();
-
-    const looksHtml =
-      /class="/.test(raw) ||
-      /<\s*(div|button|section|ul|li|span|header|footer)\b/i.test(raw);
-
-    const htmlCandidate = looksHtml ? raw : jsxLikeToHtmlSnippet(raw);
-    return buildTailwindPlaySnippet({ html: htmlCandidate });
-  }, [code]);
+  // Build the exact HTML snippet wrapped in <section>…</section>.
+  const htmlSnippet = useMemo(() => ensureSectionWrappedHtml(code || ""), [code]);
 
   const handleCopy = async () => {
-    const text = playSnippet;
+    const text = htmlSnippet;
     try {
-      if (typeof navigator !== "undefined" && navigator.clipboard && navigator.clipboard.writeText) {
+      if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(text);
       } else {
         const textarea = document.createElement("textarea");
@@ -112,32 +95,29 @@ export default function PreviewCard({ title, description, preview, code, languag
       }
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
-    } catch (e) {
+    } catch {
       // eslint-disable-next-line no-alert
       alert("Failed to copy");
     }
   };
 
-  const CopyButton = useMemo(
-    () => (
-      <button
-        type="button"
-        onClick={handleCopy}
-        className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-gray-200 bg-white/90 text-gray-700 hover:bg-white hover:shadow-sm transition ${copied ? "ring-2 ring-blue-500/30" : ""}`}
-        aria-label="Copy Tailwind Play snippet to clipboard"
-        title="Copy Tailwind Play snippet"
-      >
-        <svg width="16" height="16" viewBox="0 0 24 24" className={copied ? "text-green-600" : "text-ocean-primary"} fill="currentColor" aria-hidden="true">
-          {copied ? (
-            <path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z" />
-          ) : (
-            <path d="M8 7a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V7zm-3 3h1v7a3 3 0 0 0 3 3h8v1a2 2 0 0 1-2 2H6a4 4 0 0 1-4-4v-7a2 2 0 0 1 2-2z"/>
-          )}
-        </svg>
-        <span className="text-sm font-medium">{copied ? "Copied" : "Copy"}</span>
-      </button>
-    ),
-    [copied, playSnippet]
+  const CopyButton = (
+    <button
+      type="button"
+      onClick={handleCopy}
+      className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-gray-200 bg-white/90 text-gray-700 hover:bg-white hover:shadow-sm transition ${copied ? "ring-2 ring-blue-500/30" : ""}`}
+      aria-label="Copy Tailwind Play HTML snippet to clipboard"
+      title="Copy Tailwind Play snippet"
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" className={copied ? "text-green-600" : "text-ocean-primary"} fill="currentColor" aria-hidden="true">
+        {copied ? (
+          <path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z" />
+        ) : (
+          <path d="M8 7a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V7zm-3 3h1v7a3 3 0 0 0 3 3h8v1a2 2 0 0 1-2 2H6a4 4 0 0 1-4-4v-7a2 2 0 0 1 2-2z"/>
+        )}
+      </svg>
+      <span className="text-sm font-medium">{copied ? "Copied" : "Copy"}</span>
+    </button>
   );
 
   return (
@@ -196,7 +176,8 @@ export default function PreviewCard({ title, description, preview, code, languag
           <div className="mb-3 flex items-center justify-end">
             {CopyButton}
           </div>
-          <CodeViewer code={code} language={language} initiallyOpen={true} />
+          {/* Show the exact HTML snippet, not JSX. Use html language for highlighting. */}
+          <CodeViewer code={htmlSnippet} language="html" initiallyOpen={true} />
         </div>
       )}
     </div>

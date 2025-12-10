@@ -18,29 +18,22 @@ export default function ComponentsLibrary() {
 
   const [active, setActive] = useState(categories[0]);
 
+  // Tailwind Play–ready HTML snippets wrapped in <section> with Ocean colors
   const buttonCode = `
-import React from "react";
-
-export function OceanButton({ children = "Button" }) {
-  return (
-    <button className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-ocean-primary text-white shadow-sm hover:shadow-md transition">
-      {children}
-    </button>
-  );
-}
+<section class="min-h-[100px] p-6 bg-gradient-to-br from-blue-500/10 to-gray-50">
+  <button class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-[#2563EB] text-white shadow-sm hover:shadow-md hover:brightness-110 transition focus:outline-none focus:ring-2 focus:ring-blue-500/40">
+    Click me
+  </button>
+</section>
   `;
 
   const cardCode = `
-import React from "react";
-
-export function OceanCard({ title = "Card Title", children }) {
-  return (
-    <div className="rounded-xl border border-gray-200 bg-white p-4">
-      <div className="font-semibold text-gray-900">{title}</div>
-      <div className="text-sm text-gray-600 mt-1">{children}</div>
-    </div>
-  );
-}
+<section class="min-h-[100px] p-6 bg-gradient-to-br from-blue-500/10 to-gray-50">
+  <div class="rounded-xl border border-gray-200 bg-white p-4">
+    <div class="font-semibold text-gray-900">Hello</div>
+    <div class="text-sm text-gray-600 mt-1">This is an example card.</div>
+  </div>
+</section>
   `;
 
   return (
@@ -66,14 +59,12 @@ export function OceanCard({ title = "Card Title", children }) {
                 description="Primary action button with Ocean styling."
                 preview={<OceanButton>Click me</OceanButton>}
                 code={buttonCode}
-                language="jsx"
               />
               <PreviewCard
                 title="Ocean Card"
                 description="Simple information card."
                 preview={<OceanCard title="Hello">This is an example card.</OceanCard>}
                 code={cardCode}
-                language="jsx"
               />
             </div>
           </section>
