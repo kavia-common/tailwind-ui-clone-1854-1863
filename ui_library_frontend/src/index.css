@@ -2,6 +2,46 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Ocean Professional theme helpers */
+@layer utilities {
+  .bg-ocean-gradient {
+    @apply bg-gradient-to-br from-blue-50 to-gray-50;
+  }
+  .bg-ocean-bg {
+    background-color: #f9fafb;
+  }
+  .bg-ocean-primary {
+    background-color: #2563EB;
+  }
+  .text-ocean-primary {
+    color: #2563EB;
+  }
+  .bg-ocean-secondary {
+    background-color: #F59E0B;
+  }
+  .shadow-soft {
+    box-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 4px 16px rgba(17, 24, 39, 0.06);
+  }
+  .bg-gradient-app {
+    background-image: linear-gradient(135deg, rgba(37,99,235,.9), rgba(17,24,39,.9));
+    backdrop-filter: saturate(120%) blur(2px);
+  }
+  .code-scrollbar::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  .code-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(107,114,128,0.35);
+    border-radius: 8px;
+  }
+  .code-scrollbar::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  .ease-gentle {
+    transition-timing-function: cubic-bezier(.2,.8,.2,1);
+  }
+}
+
 /* App gradient utility */
 @layer utilities {
   .bg-gradient-app {

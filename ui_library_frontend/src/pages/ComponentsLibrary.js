@@ -1,7 +1,12 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import PreviewCard from "../components/PreviewCard";
-import { getSidebarGroupsFromCatalog, getDefaultCatalogSlug, getCatalogItemBySlug } from "../components";
+// Import from uiCatalog, not from components/index (which doesn't export these)
+import {
+  getSidebarGroupsFromCatalog,
+  getDefaultCatalogSlug,
+  getCatalogItemBySlug,
+} from "../components/uiCatalog";
 
 // PUBLIC_INTERFACE
 export default function ComponentsLibrary() {

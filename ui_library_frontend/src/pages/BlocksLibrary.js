@@ -718,7 +718,7 @@ const blocksList = [
   { label: "Team sections", slug: "team", factory: makeTeam },
   { label: "FAQs", slug: "faqs", factory: makeFAQs },
   { label: "Footers", slug: "footers", factory: makeFooters },
-  { label: "Flayout Menues", slug: "flyout-menus", factory: makeFlyoutMenus },
+  { label: "Flyout Menus", slug: "flyout-menus", factory: makeFlyoutMenus },
   { label: "Features section", slug: "features", factory: makeFeatures },
   { label: "Bento grids", slug: "bento-grids", factory: makeBento },
   { label: "Header section", slug: "header", factory: makeHeader },
