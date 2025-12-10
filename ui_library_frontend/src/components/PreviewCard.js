@@ -10,12 +10,12 @@ import CodeViewer from "./CodeViewer";
 // PUBLIC_INTERFACE
 export function ensureSectionWrappedHtml(input = "") {
   const html = (input || "").trim();
-  const isHtml = /<\s*(section|div|button|ul|li|span|header|footer|a|p|h[1-6])\b/i.test(html) || /class="/.test(html);
+  const isHtml = /\<\s*(section|div|button|ul|li|span|header|footer|a|p|h[1-6])\b/i.test(html) || /class="/.test(html);
   const normalized = isHtml ? html : jsxToStaticHtml(html);
 
   // If already a single <section> root, keep as-is (but ensure class attributes)
   const trimmed = normalized.trim();
-  const hasSectionRoot = /^<\s*section\b[\s\S]*<\/\s*section\s*>$/i.test(trimmed);
+  const hasSectionRoot = /^\<\s*section\b[\s\S]*\<\/\s*section\s*\>$/i.test(trimmed);
 
   const finalInner = hasSectionRoot ? trimmed : wrapInSection(trimmed);
   return finalInner;
