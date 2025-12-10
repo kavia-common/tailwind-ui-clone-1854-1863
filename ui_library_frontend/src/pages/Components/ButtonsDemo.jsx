@@ -374,7 +374,6 @@ export default function ButtonsDemo() {
                   Playground
                 </button>
               </div>
-              {CopyBtn}
             </div>
 
             {/* Short note for Playground snippet */}

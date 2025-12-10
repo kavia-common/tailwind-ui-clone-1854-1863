@@ -173,36 +173,10 @@ export default function PreviewCard({ title, description, preview, code }) {
 
         {activeTab === "code" && (
           <div>
-            {/* Toolbar with copy */}
             <div className="mb-3 flex items-center justify-between">
               <div className="text-xs text-gray-600">
                 Tailwind Play–ready snippet (single &lt;section&gt; root)
               </div>
-              <button
-                type="button"
-                onClick={handleCopy}
-                className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-gray-200 bg-white/90 text-gray-700 hover:bg-white hover:shadow-sm transition ${
-                  copied ? "ring-2 ring-blue-500/30" : ""
-                }`}
-                aria-label="Copy Tailwind Play HTML snippet to clipboard"
-                title="Copy Tailwind Play snippet"
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  className={copied ? "text-green-600" : "text-ocean-primary"}
-                  fill="currentColor"
-                  aria-hidden="true"
-                >
-                  {copied ? (
-                    <path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z" />
-                  ) : (
-                    <path d="M8 7a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V7zm-3 3h1v7a3 3 0 0 0 3 3h8v1a2 2 0 0 1-2 2H6a4 4 0 0 1-4-4v-7a2 2 0 0 1 2-2z" />
-                  )}
-                </svg>
-                <span className="text-sm font-medium">{copied ? "Copied" : "Copy"}</span>
-              </button>
             </div>
 
             <CodeViewer code={htmlSnippet} language="html" initiallyOpen showCopy />
