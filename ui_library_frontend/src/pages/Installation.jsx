@@ -3,8 +3,8 @@ import React from "react";
 /**
  * PUBLIC_INTERFACE
  * Installation page
- * Provides prerequisites, environment variables, and step-by-step local setup instructions
- * for the Ocean UI Library (CRA + Tailwind) app. Styled with the Ocean Professional theme.
+ * Focused on Tailwind CSS CLI quick start and minimal local run guidance for the
+ * Ocean UI Library (CRA + Tailwind) app. Ocean Professional styling is preserved.
  */
 export default function Installation() {
   const envKeys = [
@@ -23,15 +23,10 @@ export default function Installation() {
     "REACT_APP_EXPERIMENTS_ENABLED",
   ];
 
-  const codeBlockBase = `# Clone the repository
-git clone <your-repo-url> ocean-ui
-cd ocean-ui/ui_library_frontend
-
-# Install dependencies
+  const codeBlockRun = `# From ui_library_frontend/
 npm install
-
-# Start the development server
-npm start`;
+npm start
+# App runs at http://localhost:3000`;
 
   const codeBlockEnv = `# .env (create at ui_library_frontend/.env)
 # Only variables prefixed with REACT_APP_ are exposed to the client in CRA
@@ -44,13 +39,6 @@ REACT_APP_NODE_ENV=development
 REACT_APP_ENABLE_SOURCE_MAPS=true
 REACT_APP_LOG_LEVEL=debug`;
 
-  const codeBlockOps = `# Optional: run tests
-CI=true npm test
-
-# Optional: production build
-npm run build
-`;
-
   return (
     <main className="relative">
       <div className="bg-ocean-gradient">
@@ -59,19 +47,17 @@ npm run build
             <header className="mb-8">
               <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">Installation</h1>
               <p className="mt-2 text-gray-700">
-                Set up Ocean UI Library locally with Node, npm, and Git. Follow the steps below to get
-                the app running in minutes.
+                Tailwind CSS setup and minimal local run instructions for Ocean UI Library.
               </p>
             </header>
 
             <section className="space-y-6">
-              {/* Tailwind CLI quick start - placed near the top as requested */}
+              {/* 1) Tailwind CLI quick start */}
               <div className="rounded-2xl bg-white border border-gray-100 p-6">
                 <h2 className="text-xl font-semibold text-gray-900">Tailwind CSS (CLI quick start)</h2>
                 <p className="mt-2 text-gray-700">
-                  You can use Tailwind via its standalone CLI without installing Node if you prefer.
-                  The steps below show the CLI setup. In this project we already ship Tailwind via PostCSS,
-                  so this is provided for reference and for standalone usage.
+                  Use the standalone Tailwind CLI to compile styles. This project already includes Tailwind via
+                  PostCSS for CRA; the CLI steps are provided for a quick, Node-less workflow or standalone usage.
                 </p>
                 <ol className="mt-4 list-decimal pl-6 space-y-3 text-gray-800">
                   <li>
@@ -113,13 +99,13 @@ Invoke-WebRequest -Uri "https://github.com/tailwindlabs/tailwindcss/releases/lat
                     Generate your output CSS by running the CLI and watching for changes.
                     <pre className="mt-3 overflow-x-auto code-scrollbar">
                       <code className="block whitespace-pre rounded-xl border border-gray-200 bg-gray-900 p-4 text-gray-100 text-sm">
-{`# From the project root where the tailwindcss binary exists
+{`# From the folder where the tailwindcss binary exists
 ./tailwindcss -i ./src/input.css -o ./src/index.css --watch`}
                       </code>
                     </pre>
                     <p className="mt-2 text-sm text-gray-600">
-                      This will compile Tailwind classes it finds in your template files (React components, HTML, etc.)
-                      into the specified output file and rebuild on file changes.
+                      This compiles Tailwind classes found in your templates (React components, HTML, etc.) and
+                      rebuilds on file changes.
                     </p>
                   </li>
                   <li>
@@ -140,30 +126,32 @@ module.exports = {
                   </li>
                 </ol>
                 <p className="mt-4 text-sm text-gray-600">
-                  Note: In this repository we already use Tailwind via PostCSS with Create React App, so you
-                  can simply run <span className="font-mono">npm install</span> and <span className="font-mono">npm start</span>.
-                  Use the standalone CLI path above if you want a Node-less Tailwind workflow.
-                </p>
-              </div>
-              <div className="rounded-2xl bg-white border border-gray-100 p-6">
-                <h2 className="text-xl font-semibold text-gray-900">Prerequisites</h2>
-                <ul className="mt-3 list-disc pl-6 text-gray-700 space-y-1">
-                  <li>Node.js 18 or 20</li>
-                  <li>npm (comes with Node)</li>
-                  <li>Git</li>
-                </ul>
-                <p className="mt-3 text-sm text-gray-600">
-                  Verify your versions: <code className="px-1 py-0.5 bg-gray-100 rounded">node -v</code>{" "}
-                  and <code className="px-1 py-0.5 bg-gray-100 rounded">npm -v</code>.
+                  Note: In this repository Tailwind is already wired through PostCSS with Create React App.
+                  You can just run <span className="font-mono">npm install</span> and{" "}
+                  <span className="font-mono">npm start</span> to develop locally.
                 </p>
               </div>
 
+              {/* 2) Minimal project run steps (optional) */}
               <div className="rounded-2xl bg-white border border-gray-100 p-6">
-                <h2 className="text-xl font-semibold text-gray-900">Environment variables</h2>
+                <h2 className="text-xl font-semibold text-gray-900">Run locally (minimal)</h2>
                 <p className="mt-2 text-gray-700">
-                  This app uses Create React App. Only variables prefixed with{" "}
-                  <span className="font-mono font-semibold">REACT_APP_</span> are available to the
-                  frontend. Common keys you can set:
+                  Install dependencies and start the development server from the frontend folder:
+                </p>
+                <pre className="mt-4 overflow-x-auto code-scrollbar">
+                  <code className="block whitespace-pre rounded-xl border border-gray-200 bg-gray-900 p-4 text-gray-100 text-sm">
+{codeBlockRun}
+                  </code>
+                </pre>
+              </div>
+
+              {/* 3) Optional configuration (condensed env note) */}
+              <div className="rounded-2xl bg-white border border-gray-100 p-6">
+                <h2 className="text-xl font-semibold text-gray-900">Optional configuration</h2>
+                <p className="mt-2 text-gray-700">
+                  If you need to point to external services or change behavior, set environment variables in a
+                  <span className="font-mono"> .env</span> file (Create React App exposes only variables prefixed with{" "}
+                  <span className="font-mono">REACT_APP_</span>):
                 </p>
                 <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
                   {envKeys.map((k) => (
@@ -175,62 +163,11 @@ module.exports = {
                     </div>
                   ))}
                 </div>
-                <p className="mt-3 text-sm text-gray-600">
-                  Create a <span className="font-mono">.env</span> file in{" "}
-                  <span className="font-mono">ui_library_frontend/</span> (same folder as{" "}
-                  <span className="font-mono">package.json</span>).
-                </p>
                 <pre className="mt-4 overflow-x-auto code-scrollbar">
                   <code className="block whitespace-pre rounded-xl border border-gray-200 bg-gray-900 p-4 text-gray-100 text-sm">
-                    {codeBlockEnv}
+{codeBlockEnv}
                   </code>
                 </pre>
-              </div>
-
-              <div className="rounded-2xl bg-white border border-gray-100 p-6">
-                <h2 className="text-xl font-semibold text-gray-900">Quick start</h2>
-                <p className="mt-2 text-gray-700">
-                  Clone the repository, install dependencies, and start the development server:
-                </p>
-                <pre className="mt-4 overflow-x-auto code-scrollbar">
-                  <code className="block whitespace-pre rounded-xl border border-gray-200 bg-gray-900 p-4 text-gray-100 text-sm">
-                    {codeBlockBase}
-                  </code>
-                </pre>
-                <p className="mt-3 text-sm text-gray-600">
-                  The app runs on <span className="font-mono">http://localhost:3000</span> by default.
-                </p>
-              </div>
-
-              <div className="rounded-2xl bg-white border border-gray-100 p-6">
-                <h2 className="text-xl font-semibold text-gray-900">Optional tasks</h2>
-                <ul className="mt-2 list-disc pl-6 text-gray-700 space-y-1">
-                  <li>Run tests in CI mode</li>
-                  <li>Create a production build</li>
-                </ul>
-                <pre className="mt-4 overflow-x-auto code-scrollbar">
-                  <code className="block whitespace-pre rounded-xl border border-gray-200 bg-gray-900 p-4 text-gray-100 text-sm">
-                    {codeBlockOps}
-                  </code>
-                </pre>
-              </div>
-
-              <div className="rounded-2xl bg-white border border-gray-100 p-6">
-                <h2 className="text-xl font-semibold text-gray-900">Notes</h2>
-                <ul className="mt-2 list-disc pl-6 text-gray-700 space-y-1">
-                  <li>
-                    Tailwind is already configured via PostCSS; no manual CLI step is required during
-                    development.
-                  </li>
-                  <li>
-                    To point to APIs, set <span className="font-mono">REACT_APP_API_BASE</span> and/or{" "}
-                    <span className="font-mono">REACT_APP_BACKEND_URL</span>.
-                  </li>
-                  <li>
-                    Do not commit your local <span className="font-mono">.env</span> if it contains
-                    secrets.
-                  </li>
-                </ul>
               </div>
             </section>
           </div>
