@@ -4,12 +4,12 @@ import CodeViewer from "../../components/CodeViewer";
 
 /**
  * PUBLIC_INTERFACE
- * ButtonsDemo displays the reusable Button component variants and sizes,
- * and shows JSX code snippets that are generated from the exact same data used to render the preview.
- * This guarantees 1:1 parity between what users see and what they copy.
+ * ButtonsDemo renders reusable Button variants using the same <section> pattern as other components.
+ * The code snippet is programmatically derived from the same JSX structure used to render the preview,
+ * ensuring exact parity. It follows the same Preview/Code tabs and header layout convention.
  */
 export default function ButtonsDemo() {
-  // Icons used in examples
+  // Small inline icons used in examples (same instances used for preview and code generation)
   const LeftIcon = (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="opacity-90">
       <path d="M12 2a10 10 0 1 0 .001 20.001A10 10 0 0 0 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z" />
@@ -17,16 +17,13 @@ export default function ButtonsDemo() {
   );
   const RightIcon = (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="opacity-90">
-    <path d="M12 4l1.41 1.41L8.83 10H20v2H8.83l4.58 4.59L12 18l-8-8 8-8z" />
+      <path d="M12 4l1.41 1.41L8.83 10H20v2H8.83l4.58 4.59L12 18l-8-8 8-8z" />
     </svg>
   );
 
   /**
-   * Define a single source of truth for all examples.
-   * Each group has:
-   * - heading: section title
-   * - wrapperClass: container className for the buttons within the preview <section>
-   * - buttons: ordered list of Button props and inner text
+   * Config describing all examples. This is the single source of truth used for both preview and snippet.
+   * Each group has a heading, a wrapperClass applied to the inner container, and a list of Button props.
    */
   const exampleGroups = [
     {
@@ -83,7 +80,20 @@ export default function ButtonsDemo() {
     },
   ];
 
-  // Helper to render a Button from config (for the live preview)
+  // Strict prop order helper used for both rendering (props order not visible) and snippet generation (visible)
+  const propsInOrder = (b) => {
+    const ordered = [];
+    if (b.size) ordered.push(['size', `"${b.size}"`]);
+    if (b.variant) ordered.push(['variant', `"${b.variant}"`]);
+    if (b.disabled) ordered.push(['disabled', null]);
+    if (b.loading) ordered.push(['loading', null]);
+    if (b.fullWidth) ordered.push(['fullWidth', null]);
+    if (b.leftIcon) ordered.push(['leftIcon', '{LeftIcon}']);
+    if (b.rightIcon) ordered.push(['rightIcon', '{RightIcon}']);
+    return ordered;
+  };
+
+  // Live preview renderer
   const renderBtn = (cfg, idx) => (
     <Button
       key={idx}
@@ -99,12 +109,14 @@ export default function ButtonsDemo() {
     </Button>
   );
 
-  // Convert group config into a JSX snippet string that mirrors the rendered preview exactly.
-  const buildJsxSnippet = (group) => {
+  // Programmatically derive the JSX snippet from the same configuration and ensure <section> wrapper
+  const buildSectionJsxSnippet = (group) => {
     const importLine = `import { Button } from "${group.importPath}";`;
 
-    const iconBlock =
-`const LeftIcon = (
+    // Only include icons if any button needs them
+    const needsIcons = group.buttons.some((b) => b.leftIcon || b.rightIcon);
+    const iconBlock = needsIcons
+      ? `const LeftIcon = (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
     <path d="M12 2a10 10 0 1 0 .001 20.001A10 10 0 0 0 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z" />
   </svg>
@@ -114,34 +126,27 @@ const RightIcon = (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
     <path d="M12 4l1.41 1.41L8.83 10H20v2H8.83l4.58 4.59L12 18l-8-8 8-8z" />
   </svg>
-);`;
+);`
+      : "";
 
-    // Build each <Button ...>Text</Button> line ensuring prop ordering and values match render
-    const btnToLine = (b) => {
-      const props = [];
-      // Maintain consistent prop order: size, variant, disabled, loading, fullWidth, leftIcon, rightIcon
-      if (b.size) props.push(`size="${b.size}"`);
-      if (b.variant) props.push(`variant="${b.variant}"`);
-      if (b.disabled) props.push("disabled");
-      if (b.loading) props.push("loading");
-      if (b.fullWidth) props.push("fullWidth");
-      if (b.leftIcon) props.push("leftIcon={LeftIcon}");
-      if (b.rightIcon) props.push("rightIcon={RightIcon}");
-      const propsStr = props.length ? " " + props.join(" ") : "";
-      return `      <Button${propsStr}>${b.children}</Button>`;
+    const buttonLine = (b) => {
+      const parts = propsInOrder(b).map(([k, v]) => (v === null ? k : `${k}=${v}`));
+      const propsStr = parts.length ? " " + parts.join(" ") : "";
+      return `        <Button${propsStr}>${b.children}</Button>`;
     };
 
-    const needsIcons = group.buttons.some((b) => b.leftIcon || b.rightIcon);
-
+    // The derived snippet follows the same <section> ... <div className={wrapperClass}> ... pattern
     const lines = [
       importLine,
       "",
-      ...(needsIcons ? [iconBlock, ""] : []),
+      ...(iconBlock ? [iconBlock, ""] : []),
       "export function Example() {",
       "  return (",
-      `    <div className="${group.wrapperClass}">`,
-      ...group.buttons.map(btnToLine),
-      "    </div>",
+      '    <section>',
+      `      <div className="${group.wrapperClass}">`,
+      ...group.buttons.map(buttonLine),
+      "      </div>",
+      "    </section>",
       "  );",
       "}",
     ];
@@ -149,21 +154,23 @@ const RightIcon = (
     return lines.join("\n").trim();
   };
 
-  // Build memoized previews and their code from the same config
+  // Build memoized sections with preview JSX and the derived code string
   const sections = useMemo(() => {
     return exampleGroups.map((g) => {
       const preview = (
-        <div className={g.wrapperClass}>
-          {g.buttons.map((b, i) => renderBtn(b, i))}
-        </div>
+        <section>
+          <div className={g.wrapperClass}>
+            {g.buttons.map((b, i) => renderBtn(b, i))}
+          </div>
+        </section>
       );
-      const code = buildJsxSnippet(g);
+      const code = buildSectionJsxSnippet(g);
       return { heading: g.heading, preview, code };
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // all configs are static
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // configs are static
 
-  // local copy helper (mirrors PreviewCard copy)
+  // Reusable copy hook (pattern consistent with PreviewCard behavior)
   const useCopy = () => {
     const [copied, setCopied] = useState(false);
     const copy = async (text) => {
@@ -191,7 +198,7 @@ const RightIcon = (
     return { copied, copy };
   };
 
-  // Section component to render preview + code tab, consistent with app catalog conventions.
+  // Inline section renderer matching the library's Preview/Code tabs UI and spacing
   const SnippetSection = ({ heading, preview, code }) => {
     const [tab, setTab] = useState("preview");
     const { copied, copy } = useCopy();
@@ -200,15 +207,24 @@ const RightIcon = (
       <button
         type="button"
         onClick={() => copy(code)}
-        className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-gray-200 bg-white/90 text-gray-700 hover:bg-white hover:shadow-sm transition ${copied ? "ring-2 ring-blue-500/30" : ""}`}
+        className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-gray-200 bg-white/90 text-gray-700 hover:bg-white hover:shadow-sm transition ${
+          copied ? "ring-2 ring-blue-500/30" : ""
+        }`}
         aria-label="Copy JSX snippet"
         title="Copy JSX snippet"
       >
-        <svg width="16" height="16" viewBox="0 0 24 24" className={copied ? "text-green-600" : "text-ocean-primary"} fill="currentColor" aria-hidden="true">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          className={copied ? "text-green-600" : "text-ocean-primary"}
+          fill="currentColor"
+          aria-hidden="true"
+        >
           {copied ? (
             <path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z" />
           ) : (
-            <path d="M8 7a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V7zm-3 3h1v7a3 3 0 0 0 3 3h8v1a2 2 0 0 1-2 2H6a4 4 0 0 1-4-4v-7a2 2 0 0 1 2-2z"/>
+            <path d="M8 7a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V7zm-3 3h1v7a3 3 0 0 0 3 3h8v1a2 2 0 0 1-2 2H6a4 4 0 0 1-4-4v-7a2 2 0 0 1 2-2z" />
           )}
         </svg>
         <span className="text-sm font-medium">{copied ? "Copied" : "Copy"}</span>
@@ -223,14 +239,20 @@ const RightIcon = (
             <button
               type="button"
               onClick={() => setTab("preview")}
-              className={`px-3 py-1.5 text-sm rounded-md transition ${tab === "preview" ? "bg-white text-ocean-primary shadow-sm" : "text-gray-700 hover:text-ocean-primary"}`}
+              className={`px-3 py-1.5 text-sm rounded-md transition ${
+                tab === "preview" ? "bg-white text-ocean-primary shadow-sm" : "text-gray-700 hover:text-ocean-primary"
+              }`}
+              aria-pressed={tab === "preview"}
             >
               Preview
             </button>
             <button
               type="button"
               onClick={() => setTab("code")}
-              className={`px-3 py-1.5 text-sm rounded-md transition ${tab === "code" ? "bg-white text-ocean-primary shadow-sm" : "text-gray-700 hover:text-ocean-primary"}`}
+              className={`px-3 py-1.5 text-sm rounded-md transition ${
+                tab === "code" ? "bg-white text-ocean-primary shadow-sm" : "text-gray-700 hover:text-ocean-primary"
+              }`}
+              aria-pressed={tab === "code"}
             >
               Code
             </button>
@@ -253,7 +275,6 @@ const RightIcon = (
     );
   };
 
-  // Render all sections based on single source of truth
   return (
     <div className="space-y-8">
       {sections.map((s) => (
