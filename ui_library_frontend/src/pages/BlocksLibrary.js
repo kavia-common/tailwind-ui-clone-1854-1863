@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Sidebar from "../components/Sidebar";
+import PreviewCard from "../components/PreviewCard";
 
 /**
  * PUBLIC_INTERFACE
@@ -768,22 +769,16 @@ function readSlugFromUrl(defaultSlug) {
   }
 }
 
-// Preview + code card following the same tabs/format as the Hero pattern
-function BlockCard({ title, preview }) {
+ // Preview + code card using PreviewCard to ensure tabs and copy are unified
+function BlockCard({ title, preview, codeSnippet }) {
   return (
-    <div className="bg-white rounded-2xl shadow-soft border border-gray-100 overflow-hidden transition hover:shadow-lg">
-      <div className="px-5 py-4 border-b border-gray-100 bg-gray-50/60">
-        <div>
-          <h3 className="text-base font-semibold text-gray-900">{title}</h3>
-        </div>
-      </div>
-
-      <div className="p-5">
-        <div className="rounded-xl border border-gray-100 p-6 bg-gradient-to-br from-blue-500/10 to-gray-50">
-          {preview}
-        </div>
-      </div>
-    </div>
+    <PreviewCard
+      title={title}
+      description="Live preview and code"
+      preview={preview}
+      codeSnippet={codeSnippet}
+      language="markup"
+    />
   );
 }
 
@@ -841,7 +836,11 @@ export default function BlocksLibrary() {
 
             <div className="grid grid-cols-1 gap-6">
               {currentDemo ? (
-                <BlockCard title={blocksList.find((b) => b.slug === selectedSlug)?.label || "Block"} preview={currentDemo.preview} />
+                <BlockCard
+                  title={blocksList.find((b) => b.slug === selectedSlug)?.label || "Block"}
+                  preview={currentDemo.preview}
+                  codeSnippet={currentDemo.html}
+                />
               ) : (
                 <div className="rounded-2xl border border-dashed border-gray-300 p-6 bg-white">
                   <h3 className="font-semibold text-gray-900">No block selected</h3>

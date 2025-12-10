@@ -1,10 +1,11 @@
 import React from "react";
 import { Button } from "../../components/ui";
+import PreviewCard from "../../components/PreviewCard";
 
 /**
  * PUBLIC_INTERFACE
- * ButtonsDemo renders reusable Button variants using the same <section> pattern as other components.
- * All Preview/Code tabs and code viewers have been removed. Only live previews remain.
+ * ButtonsDemo renders reusable Button variants with Preview/Code tabs via PreviewCard.
+ * Code tab shows a programmatically derived, section-only snippet with a single copy button.
  */
 export default function ButtonsDemo() {
   const LeftIcon = (
@@ -87,19 +88,20 @@ export default function ButtonsDemo() {
   return (
     <div className="space-y-8">
       {exampleGroups.map((g) => (
-        <section key={g.heading}>
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-gray-900">{g.heading}</h3>
-          </div>
-
-          <div className="mt-3 rounded-xl border border-gray-100 p-6 bg-gradient-to-br from-blue-500/10 to-gray-50">
+        <PreviewCard
+          key={g.heading}
+          title={g.heading}
+          description="Live preview and code"
+          preview={
             <section>
               <div className={g.wrapperClass}>
                 {g.buttons.map((b, i) => renderBtn(b, i))}
               </div>
             </section>
-          </div>
-        </section>
+          }
+          // Let PreviewCard derive a section-only snippet
+          language="markup"
+        />
       ))}
     </div>
   );

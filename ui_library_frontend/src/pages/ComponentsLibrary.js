@@ -74,8 +74,9 @@ export default function ComponentsLibrary() {
               {current && (
                 <PreviewCard
                   title={current.title}
-                  description="Live preview"
+                  description="Live preview and code"
                   preview={current.preview || null}
+                  language="markup"
                 />
               )}
 
