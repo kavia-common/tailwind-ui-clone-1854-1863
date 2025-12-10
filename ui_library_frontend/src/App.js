@@ -66,18 +66,27 @@ function Navbar() {
 
 // PUBLIC_INTERFACE
 export default function App() {
-  /** App root with routes and persistent navbar */
+  /**
+   * App root with routes and persistent navbar.
+   * We centralize scroll behavior here:
+   * - A container below the fixed navbar consumes the full viewport height (min-h-[calc(100vh-4rem)]).
+   * - It is scrollable (overflow-y-auto), ensuring pages fit without document overflow.
+   * - Preserves gradient/theme classes from the app background.
+   */
   return (
     <Router>
       <div className="min-h-screen bg-ocean-gradient bg-ocean-bg">
         <Navbar />
+        {/* Account for fixed navbar height (h-16 => 4rem). Make main area fill and scroll. */}
         <div className="pt-16">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/components" element={<ComponentsLibrary />} />
-            <Route path="/blocks" element={<BlocksLibrary />} />
-            <Route path="/installation" element={<Installation />} />
-          </Routes>
+          <div className="min-h-[calc(100vh-4rem)] overflow-y-auto">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/components" element={<ComponentsLibrary />} />
+              <Route path="/blocks" element={<BlocksLibrary />} />
+              <Route path="/installation" element={<Installation />} />
+            </Routes>
+          </div>
         </div>
       </div>
     </Router>

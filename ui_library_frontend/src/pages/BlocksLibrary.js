@@ -816,7 +816,8 @@ export default function BlocksLibrary() {
   return (
     <main className="relative">
       <div className="mx-auto max-w-7xl">
-        <div className="flex">
+        {/* Consistent layout with ComponentsLibrary: column on mobile, row on md+ with fixed-height area */}
+        <div className="flex flex-col md:flex-row md:items-stretch md:h-[calc(100vh-4rem)]">
           <div className="hidden md:block">
             <Sidebar title="UI Blocks" categories={sidebarGroups} onSelect={handleSelect} />
           </div>
@@ -824,7 +825,8 @@ export default function BlocksLibrary() {
             <Sidebar title="UI Blocks" categories={sidebarGroups} onSelect={handleSelect} />
           </div>
 
-          <section className="flex-1 p-4 sm:p-6 lg:p-8">
+          {/* Main content scroll area */}
+          <section className="flex-1 p-4 sm:p-6 lg:p-8 md:overflow-y-auto">
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-gray-900">UI Blocks</h2>
               <p className="text-gray-600 mt-1">

@@ -61,7 +61,9 @@ export default function ComponentsLibrary() {
   return (
     <main className="relative">
       <div className="mx-auto max-w-7xl">
-        <div className="flex">
+        {/* Use a column on small screens so mobile sidebar toggle isn't cramped; md+: row layout */}
+        <div className="flex flex-col md:flex-row md:items-stretch md:h-[calc(100vh-4rem)]">
+          {/* Sidebar retains its own internal overflow behavior */}
           <div className="hidden md:block">
             <Sidebar title="Components" categories={sidebarGroups} onSelect={handleSelect} />
           </div>
@@ -69,7 +71,8 @@ export default function ComponentsLibrary() {
             <Sidebar title="Components" categories={sidebarGroups} onSelect={handleSelect} />
           </div>
 
-          <section className="flex-1 p-4 sm:p-6 lg:p-8">
+          {/* Main content scroll area */}
+          <section className="flex-1 p-4 sm:p-6 lg:p-8 md:overflow-y-auto">
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-gray-900">Component Library</h2>
               <p className="text-gray-600 mt-1">
