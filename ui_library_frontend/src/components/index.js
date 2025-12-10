@@ -1,1 +1,1 @@
-export { getSidebarGroupsFromCatalog, getDefaultCatalogSlug, getCatalogItemBySlug } from "./uiCatalog.js";
+export { getSidebarGroupsFromCatalog, getDefaultCatalogSlug, getCatalogItemBySlug } from "./uiCatalog";
