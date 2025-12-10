@@ -5,12 +5,8 @@ import PreviewCard, { ensureSectionWrappedHtml } from "../components/PreviewCard
 /**
  * PUBLIC_INTERFACE
  * BlocksLibrary
- * Renders all UI Blocks (from the sidebar order) so that each block shows:
- * 1) A <section> preview,
- * 2) A code tab with a programmatically derived snippet that exactly matches the <section> markup shown,
- * 3) Copy-to-clipboard behavior consistent with components.
- *
- * We implement lightweight demo previews/snippets per block locally here to avoid changing existing catalogs.
+ * Renders all UI Blocks with a unique <section> preview and an exact matching section-only HTML snippet.
+ * Ensures: code tab is derived from the same source, copy-to-clipboard works, and sidebar labels map to demo keys.
  */
 export default function BlocksLibrary() {
   // Sidebar entries in fixed order (must not change)
@@ -55,7 +51,6 @@ ${inner}
     });
 
     return {
-      // Hero: leave as-is, matches existing pattern
       "hero-section": make(
         `
   <div class="mx-auto max-w-3xl text-center">
@@ -633,7 +628,7 @@ ${inner}
     };
   }, []);
 
-  // Selected slug from URL or first item
+  // Sensible default selection: 'Hero section'
   const orderedSlugs = useMemo(() => blocksCategories.map((c) => c.key), [blocksCategories]);
 
   const readSlugFromUrl = () => {
@@ -672,7 +667,7 @@ ${inner}
   // Resolve current demo
   const currentDemo = demos[selectedSlug];
 
-  // Fallback placeholder if no demo found (should not happen since all are covered)
+  // Fallback placeholder (should not occur)
   const fallback = {
     preview: (
       <section>
