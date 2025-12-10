@@ -17,7 +17,6 @@ export default function CodeViewer({ code = "", language = "jsx", initiallyOpen 
   }, [code, language]);
 
   useEffect(() => {
-    // Ensure Prism styles apply (for dynamic content)
     Prism.highlightAll();
   }, [open, highlighted]);
 
