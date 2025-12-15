@@ -50,6 +50,33 @@
   - Use this app when you want a self-contained, React-powered playground with instant visual feedback, copyable HTML/JSX, and a consistent Ocean theme.
   - Reach for Tailwind CSS/Preline/Tailwind UI/Tailwind Plus when you need frameworks, production-grade component packs, or design systems to import—not an interactive preview and code inspection environment.
 
+## Why Teams Choose These Tools (Key Strengths)
+
+- Tailwind CSS
+  - Utility‑first workflow that maps design decisions directly to class names, improving speed and reducing context‑switching.
+  - Strong design consistency via shared tokens, responsive variants, and composition patterns that scale across teams.
+  - Great performance footprint when paired with purge/content scanning to remove unused styles from production bundles.
+  - Mature ecosystem with plugins, presets, IDE support, and community patterns covering most layout and UI needs.
+  - Framework‑agnostic and portable: works with React, Vue, Svelte, plain HTML, and more without lock‑in.
+
+- Tailwind UI
+  - Production‑grade components and patterns designed to high visual and interaction standards.
+  - Accessibility considerations and responsive variants are baked into examples for faster, safer adoption.
+  - Saves teams time by providing vetted building blocks and page‑level compositions to start from real solutions.
+  - Extensive example coverage and strong design quality help maintain visual coherence across features.
+
+- Tailwind Plus
+  - Enriched component packs and plugins that extend baseline Tailwind utilities with ready‑to‑use patterns.
+  - Productivity boosts through prebuilt sections (e.g., navbars, pricing, dashboards) and opinionated utility groupings.
+  - Useful add‑ons (animations, forms, charts, layout helpers) can shorten setup time for common product areas.
+  - Offerings vary by vendor; teams should verify licensing, maintenance cadence, and fit with existing conventions.
+
+- Preline
+  - Ready‑made components built on Tailwind utilities to accelerate delivery without abandoning the Tailwind approach.
+  - Clear documentation and examples that demonstrate composition, variants, and integration details.
+  - Accessibility‑minded defaults and familiar patterns reduce rework and QA overhead.
+  - Broad catalog with consistent styling supports rapid prototyping and production usage.
+
 ## Scope & Environment
 
 - Context: React + Tailwind within a CRA project; Tailwind picked up via PostCSS; PrismJS for code highlighting.
