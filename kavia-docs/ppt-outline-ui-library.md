@@ -57,11 +57,35 @@
 - Lightweight, fast-loading UI
 
 ## 9) How It Differs (Tailwind CSS, Tailwind UI, Tailwind Plus, Preline)
-- Tailwind CSS: utilities; we add app UX
-- Tailwind UI: paid patterns; we demo alternatives
-- Tailwind Plus: package; we focus previews
-- Preline: components; we add code-first flow
-- Our focus: discovery, previews, copyable code
+- Tailwind CSS
+  - Utility-first framework; ours is a live explorer
+  - Framework-level utilities vs in-app component previews
+  - CLI/Docs-centric vs app-centric discovery
+  - No previews by default vs embedded previews here
+- Tailwind UI
+  - Curated paid components; this is free explorer
+  - Catalog purchase vs in-app previews and code
+  - Design catalog vs copy-ready code per item
+  - Docs pages vs interactive, app-based flow
+- Tailwind Plus
+  - Add-on packs/plugins vs integrated explorer
+  - Plugin-focused vs live preview and learn
+  - Extends Tailwind config vs demo-first usage
+  - Setup-centric vs copy-ready, paste-and-go
+- Preline
+  - Broad component library vs curated explorer
+  - Library usage vs themed, live previews
+  - Docs examples vs interactive code viewer
+  - Wide breadth vs focused, app-centric discovery
+- Positioning
+  - Companion tool to explore, learn, and copy
+  - Neutral, interoperable with any Tailwind stack
+
+## 9.1) One-View Comparison (Quick Hits)
+- Framework vs Library vs Explorer (what each is)
+- Catalog breadth vs Live previews vs Copy-ready code
+- Docs-centric vs App-centric discovery
+- Pricing/licensing: paid/free varies by vendor
 
 ## 10) Why This App Fits as Best Companion
 - Ideal alongside Tailwind CSS usage
