@@ -30,21 +30,73 @@
 
 ## How This Differs From Other Tools
 
-- Versus Tailwind CSS
-  - Tailwind CSS is a utility-first CSS framework; it doesn’t provide React pages, previews, or code viewers.
-  - This app is a working React UI library experience that uses Tailwind utilities to render live examples and extract shareable snippets.
+### Tailwind CSS
 
-- Versus Tailwind UI
-  - Tailwind UI is a commercial set of professionally designed components and templates.
-  - This app is an open sample library focused on the developer experience: live React previews, toggleable code, and Ocean Professional theme, not a commercial component pack.
+#### Differences vs This App
+- Tailwind CSS is a utility-first CSS framework; this app is a React live explorer showcasing components and blocks built with those utilities.
+- Tailwind CSS provides design tokens and classes; this app provides live previews, code viewers, and in-app navigation.
+- Tailwind CSS is framework-agnostic; this app is a CRA React implementation with an Ocean Professional theme.
 
-- Versus Tailwind Plus
-  - Tailwind Plus (third-party packs) typically provide component collections or templates.
-  - This app delivers an interactive browsing experience with routing, collapsible sidebars, and a code viewer integrated into each preview card.
+#### Defined Gap
+- No integrated, runnable React preview workspace out of the box.
+- No side-by-side preview and copy-ready JSX/HTML snippets within a single UI.
+- Limited discovery experience for curated examples across pages and categories.
 
-- Versus Preline
-  - Preline is a component library built on Tailwind with ready-made UI pieces.
-  - This app emphasizes a demo-workbench approach: live previews, preview-to-code flow, and a focused Ocean Professional aesthetic within a CRA environment.
+#### How This App Fits
+- Use Tailwind CSS for utilities and tokens; use this app to explore how those utilities compose into real components.
+- Try variations in a live React runtime, then copy JSX/HTML directly from the code viewer.
+- Navigate examples quickly via the top navbar and sidebar, aligned to the Ocean Professional theme.
+
+### Tailwind UI
+
+#### Differences vs This App
+- Tailwind UI offers commercial, production-grade components and templates; this app provides open, runnable demos in a React environment.
+- Tailwind UI focuses on polished, purchasable designs; this app focuses on live previews, code inspection, and an explorer workflow.
+- Tailwind UI content is delivered as code assets; this app embeds examples with a built-in viewer and navigation.
+
+#### Defined Gap
+- Out of the box, no unified React sandbox for running multiple examples with routing and state.
+- No single interface to toggle between preview and code for every example.
+- Discovery across categories and quick comparison of variants require additional project setup.
+
+#### How This App Fits
+- Start with Tailwind UI for production-grade components; use this app as a live explorer and teaching aid for utility composition.
+- Validate layout and interactions in a running React app before integrating into your product.
+- Copy snippets alongside the preview and adapt them to project conventions while keeping Tailwind UI patterns.
+
+### Tailwind Plus
+
+#### Differences vs This App
+- Tailwind Plus (third-party packs) provide components, templates, or plugins; this app is an interactive browser for live React examples.
+- Tailwind Plus expands available building blocks; this app centralizes preview, code, and navigation in one place.
+- Tailwind Plus focuses on adding assets; this app focuses on the learning and exploration workflow.
+
+#### Defined Gap
+- Asset packs alone do not provide a runnable, navigable React playground.
+- No universal preview-to-code flow across all examples in a single interface.
+- Curated discovery and side-by-side comparison usually require custom scaffolding.
+
+#### How This App Fits
+- Use Tailwind Plus for additional patterns and sections; use this app to experiment and learn those patterns interactively.
+- Keep a fast feedback loop with live previews, then copy/paste into your project.
+- Maintain consistency with the Ocean Professional theme while exploring variants.
+
+### Preline
+
+#### Differences vs This App
+- Preline is a Tailwind-based component library; this app is a React live explorer with previews and a code viewer.
+- Preline provides ready-made UI elements; this app demonstrates composition, layout, and code alongside previews.
+- Preline ships components and docs; this app offers in-app navigation and integrated examples with an Ocean theme.
+
+#### Defined Gap
+- No built-in, CRA-style React playground that aggregates examples with routing.
+- Limited ability to toggle code next to every preview inside a single UI.
+- Discovery and cross-example exploration typically happen in documentation pages rather than a live app.
+
+#### How This App Fits
+- Use Preline for production-ready components; use this app to preview, learn, and copy code in a running React context.
+- Iterate faster by testing component usage patterns and props in a live environment.
+- Leverage the Ocean Professional theme for a cohesive look while exploring component combinations.
 
 - Bottom line
   - Use this app when you want a self-contained, React-powered playground with instant visual feedback, copyable HTML/JSX, and a consistent Ocean theme.
